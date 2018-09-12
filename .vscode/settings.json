@@ -1,3 +1,8 @@
 {
-	"typescript.tsdk": "./node_modules/typescript/lib"
+	"typescript.tsdk": "./node_modules/typescript/lib",
+	"files.exclude": {
+		"app/dist": true,
+		"app/main.js": true,
+		"app/main.js.map": true
+	}
 }
