@@ -7,6 +7,7 @@ import { Switch, Route } from 'react-router'
 
 import App from './App'
 import HomePage from './Home'
+import Project from './Project'
 
 interface IRootType {
 	store: Redux.Store<any>
@@ -19,6 +20,7 @@ export default function Root({ store, history }: IRootType) {
 			<ConnectedRouter history={history}>
 				<App>
 					<Switch>
+						<Route path="/project/:projectid" component={Project} />
 						<Route path="/" component={HomePage} />
 					</Switch>
 				</App>
