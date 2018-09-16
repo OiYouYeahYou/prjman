@@ -4,7 +4,7 @@
 		"moduleResolution": "node",
 		"module": "commonjs",
 		"jsx": "react",
-		"lib": ["dom", "es6", "dom.iterable", "scripthost"],
+		"lib": ["dom", "es6", "es2017", "dom.iterable", "scripthost"],
 		"types": [],
 
 		"alwaysStrict": true,
@@ -12,7 +12,7 @@
 		"noImplicitAny": true,
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
-		"noUnusedLocals": true,
+		"noUnusedLocals": false,
 
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
