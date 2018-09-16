@@ -36,9 +36,9 @@ export class Script extends React.Component<IScriptProps, IScriptState> {
 				{this.state.isVisible ? (
 					<div
 						style={{
-							padding: '10px',
 							color: 'grey',
 							fontSize: 'small',
+							padding: '10px',
 						}}
 					>
 						{this.props.script}

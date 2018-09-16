@@ -17,9 +17,9 @@ declare const module: NodeModule & {
 
 const actionCreators = Object.assign({}, { push })
 
-const logger = (<any>createLogger)({
-	level: 'info',
+const logger = (createLogger as any)({
 	collapsed: true,
+	level: 'info',
 })
 
 const history = createHashHistory()
@@ -38,7 +38,7 @@ const enhancer = composeEnhancers(applyMiddleware(thunk, router, logger))
 
 export = {
 	history,
-	configureStore(initialState: Object | void) {
+	configureStore(initialState: object | void) {
 		const store = createStore(rootReducer, initialState, enhancer)
 
 		if (module.hot) {

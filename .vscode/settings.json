@@ -4,5 +4,6 @@
 		"app/dist": true,
 		"app/main.js": true,
 		"app/main.js.map": true
-	}
+	},
+	"tslint.autoFixOnSave": true
 }
