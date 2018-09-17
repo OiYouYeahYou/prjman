@@ -2,7 +2,7 @@ import { readdirSync, lstatSync, readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 import { homedir } from 'os'
 
-interface IProjects {
+export interface IProjects {
 	[id: string]: IProject
 }
 
@@ -12,7 +12,7 @@ export interface PackageJSON {
 	scripts?: { [name: string]: string }
 }
 
-interface IProject {
+export interface IProject {
 	id: string
 	path: string
 	pkg: PackageJSON | null
@@ -44,6 +44,10 @@ export const projects = (() => {
 
 	return projects
 })()
+
+export const projectEntries = Object.entries(projects).sort(([a], [b]) =>
+	a.localeCompare(b)
+)
 
 export function getProject(id: string) {
 	return projects[id]
