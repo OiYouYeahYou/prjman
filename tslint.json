@@ -16,6 +16,10 @@
 		"arrow-parens": [true, "ban-single-arg-parens"],
 		"no-empty-interface": false,
 		"interface-name": false,
+		"no-trailing-whitespace": false,
+		"no-consecutive-blank-lines": false,
+		"eofline": false,
+		"whitespace": false,
 		"prefer-const": [
 			true,
 			{
