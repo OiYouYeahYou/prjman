@@ -37,18 +37,17 @@ export default class Project extends React.Component<
 	}
 
 	renderProject(project: IProject) {
+		const { pkg, path } = project
 		const {
 			name = this.id,
 			description = <i>no description</i>,
 			scripts = {},
-		} = project.pkg || ({} as PackageJSON)
+		} = pkg || ({} as PackageJSON)
 
 		return (
 			<div>
 				<h2>Name: {name}</h2>
-				<OpenInEditor path={'/Users/jason/code/prjman2/'}>
-					Open in Editor
-				</OpenInEditor>
+				<OpenInEditor path={path}>Open in Editor</OpenInEditor>
 				<Link to={`/readme/${this.id}`}>Readme</Link>
 				<h2>Descrtipion:</h2>
 				{description}
