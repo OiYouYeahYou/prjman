@@ -96,15 +96,6 @@
 	"bugs": {
 		"url": "https://github.com/oiyouyeahyou/prjman/issues"
 	},
-	"keywords": [
-		"electron",
-		"boilerplate",
-		"react",
-		"react-router",
-		"flux",
-		"webpack",
-		"react-hot"
-	],
 	"homepage": "https://github.com/oiyouyeahyou/prjman#readme",
 	"devDependencies": {
 		"@types/enzyme": "^3.1.1",
