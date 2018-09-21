@@ -7,7 +7,8 @@ import { Switch, Route } from 'react-router'
 
 import App from './App'
 import HomePage from './Home'
-import Project from './Project'
+import Project from './ProjectPage'
+import { Readme } from './ReadmePage'
 
 interface IRootType {
 	store: Redux.Store<any>
@@ -20,7 +21,11 @@ export default function Root({ store, history }: IRootType) {
 			<ConnectedRouter history={history}>
 				<App>
 					<Switch>
-						<Route path="/project/:projectid" component={Project} />
+						<Route
+							path="/project/:projectid/"
+							component={Project}
+						/>
+						<Route path="/readme/:projectid/" component={Readme} />
 						<Route path="/" component={HomePage} />
 					</Switch>
 				</App>
