@@ -16,7 +16,6 @@ export interface IProject {
 	id: string
 	path: string
 	pkg: PackageJSON | null
-	readmePath: string | null
 }
 
 export const projects = (() => {
@@ -31,14 +30,11 @@ export const projects = (() => {
 		}
 
 		const pkg = readJSON(join(path, 'package.json'))
-		const readmePath = ''
-		const rmexists = existsSync(readmePath)
 
 		projects[id] = {
 			id,
 			path,
 			pkg,
-			readmePath: rmexists ? readmePath : null,
 		}
 	})
 
