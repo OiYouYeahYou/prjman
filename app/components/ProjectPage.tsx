@@ -52,6 +52,7 @@ export default class Project extends React.Component<
 				<h2>Descrtipion:</h2>
 				{description}
 				{this.renderScripts(scripts)}
+				{this.renderDependencies(project)}
 			</div>
 		)
 	}
@@ -69,5 +70,54 @@ export default class Project extends React.Component<
 				</div>
 			)
 		}
+	}
+
+	renderDependencies(project: IProject) {
+		const prod = this.renderDeps(
+			'prod',
+			project.pkg && project.pkg.dependencies
+		)
+		const dev = this.renderDeps(
+			'dev',
+			project.pkg && project.pkg.devDependencies
+		)
+
+		if (!prod && !dev) {
+			return (
+				<div>
+					<i>no dependencies</i>
+				</div>
+			)
+		}
+
+		return (
+			<div>
+				<h3>Dependencies</h3>
+				{prod}
+				{dev}
+			</div>
+		)
+	}
+
+	renderDeps(
+		title: string,
+		dependencies: { [pkg: string]: string } | null | undefined
+	) {
+		if (!dependencies) {
+			return
+		}
+
+		return (
+			<>
+				<h4>{title}</h4>
+				<ul>
+					{Object.entries(dependencies).map(([pkg, version]) => (
+						<li key={pkg}>
+							{version} : {pkg}{' '}
+						</li>
+					))}
+				</ul>
+			</>
+		)
 	}
 }

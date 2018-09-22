@@ -10,6 +10,8 @@ export interface PackageJSON {
 	name?: string
 	description?: string
 	scripts?: { [name: string]: string }
+	dependencies?: { [pkg: string]: string }
+	devDependencies?: { [pkg: string]: string }
 }
 
 export interface IProject {
