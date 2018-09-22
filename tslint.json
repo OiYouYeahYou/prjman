@@ -20,6 +20,9 @@
 		"no-consecutive-blank-lines": false,
 		"eofline": false,
 		"whitespace": false,
+		"align": false,
+		"typedef-whitespace": false,
+		"no-empty": false,
 		"prefer-const": [
 			true,
 			{
