@@ -4,7 +4,7 @@ import ReactMarkdown = require('react-markdown')
 import { OpenInEditor } from './OpenInEditor'
 import { join } from 'path'
 import { getProject } from '../projects'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, Link } from 'react-router-dom'
 
 export interface ReadmeProps
 	extends RouteComponentProps<{ projectid: string }> {}
@@ -60,6 +60,9 @@ export class Readme extends React.Component<ReadmeProps, ReadmeState> {
 	render() {
 		return (
 			<>
+				<Link to={`/project/${this.props.match.params.projectid}`}>
+					Back to project
+				</Link>
 				<OpenInEditor path={this.state.filename} />
 				<div
 					style={{
@@ -99,6 +102,6 @@ export class Readme extends React.Component<ReadmeProps, ReadmeState> {
 	}
 
 	renderReadme() {
-		return <ReactMarkdown source={this.state.readmeString} />
+		return <ReactMarkdown source={this.state.readmeString} skipHtml />
 	}
 }
