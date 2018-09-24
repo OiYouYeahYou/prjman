@@ -153,6 +153,7 @@
 		"electron-debug": "^1.1.0",
 		"font-awesome": "^4.7.0",
 		"history": "^4.6.1",
+		"npm-registry-fetch": "^3.8.0",
 		"react": "^16.0.0",
 		"react-dom": "^16.0.0",
 		"react-markdown": "^3.6.0",
@@ -162,7 +163,8 @@
 		"react-router-redux": "^5.0.0-alpha.6",
 		"redux": "^3.6.0",
 		"redux-thunk": "^2.1.0",
-		"source-map-support": "^0.5.0"
+		"source-map-support": "^0.5.0",
+		"validate-npm-package-name": "^3.0.0"
 	},
 	"devEngines": {
 		"node": ">=6.x",
