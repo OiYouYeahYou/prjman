@@ -1,5 +1,7 @@
 import * as React from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
+import { resolve, Result } from 'npm-package-arg'
+
 import { OpenInEditor } from './OpenInEditor'
 import { Script } from './Script'
 import { getProject, PackageJSON, IProject } from '../projects'
@@ -81,8 +83,18 @@ export default class Project extends React.Component<
 			'dev',
 			project.pkg && project.pkg.devDependencies
 		)
+		const peer = this.renderDeps(
+			'peer',
+			// @ts-ignore
+			project.pkg && project.pkg.peerDependencies
+		)
+		const opts = this.renderDeps(
+			'opts',
+			// @ts-ignore
+			project.pkg && project.pkg.optionalDependencies
+		)
 
-		if (!prod && !dev) {
+		if (!prod && !dev && !peer && !opts) {
 			return (
 				<div>
 					<i>no dependencies</i>
@@ -95,6 +107,8 @@ export default class Project extends React.Component<
 				<h3>Dependencies</h3>
 				{prod}
 				{dev}
+				{peer}
+				{opts}
 			</div>
 		)
 	}
@@ -107,17 +121,29 @@ export default class Project extends React.Component<
 			return
 		}
 
+		const deps = Object.entries(dependencies).map(([pkg, version]) =>
+			this.renderDep(pkg, version)
+		)
+
 		return (
 			<>
 				<h4>{title}</h4>
-				<ul>
-					{Object.entries(dependencies).map(([pkg, version]) => (
-						<li key={pkg}>
-							{version} : {pkg}{' '}
-						</li>
-					))}
-				</ul>
+				<ul>{deps}</ul>
 			</>
+		)
+	}
+
+	renderDep(pkg: string, version: string) {
+		const result = resolve(pkg, version)
+		const { name, rawSpec, type } = result
+
+		return (
+			<li
+				// @ts-ignore bad typing
+				key={name}
+			>
+				{rawSpec}: {name} - {type}
+			</li>
 		)
 	}
 }
