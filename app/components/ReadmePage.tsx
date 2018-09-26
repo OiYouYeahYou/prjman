@@ -71,18 +71,18 @@ export class Readme extends React.Component<ReadmeProps, ReadmeState> {
 						padding: '3px',
 					}}
 				>
-					{this.renderX()}
+					{this.renderChooser()}
 				</div>
 			</>
 		)
 	}
 
-	renderX() {
+	renderChooser() {
 		if (this.state.isMissing) {
 			return this.renderIsMissing()
 		} else if (this.state.error) {
 			return this.renderError()
-		} else if (this.state.readmeString) {
+		} else if (typeof this.state.readmeString === 'string') {
 			return this.renderReadme()
 		} else {
 			return this.renderLoading()
@@ -102,6 +102,12 @@ export class Readme extends React.Component<ReadmeProps, ReadmeState> {
 	}
 
 	renderReadme() {
+		const { readmeString } = this.state
+
+		if (readmeString) {
+			return <i>readme is blank</i>
+		}
+
 		return <ReactMarkdown source={this.state.readmeString} skipHtml />
 	}
 }
