@@ -12,6 +12,8 @@ export interface PackageJSON {
 	scripts?: { [name: string]: string }
 	dependencies?: { [pkg: string]: string }
 	devDependencies?: { [pkg: string]: string }
+	peerDependencies?: { [pkg: string]: string }
+	optionalDependencies?: { [pkg: string]: string }
 }
 
 export interface IProject {

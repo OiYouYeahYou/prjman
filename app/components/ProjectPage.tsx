@@ -5,6 +5,9 @@ import { resolve, Result } from 'npm-package-arg'
 import { OpenInEditor } from './OpenInEditor'
 import { Script } from './Script'
 import { getProject, PackageJSON, IProject } from '../projects'
+import { StoreEnhancer } from 'redux'
+import { DependencyItem } from './dependency-list-item'
+import { DependenciesSection } from './dependency-list-section'
 
 export interface ProjectProps
 	extends RouteComponentProps<{ projectid: string }> {}
@@ -54,7 +57,7 @@ export default class Project extends React.Component<
 				<h2>Descrtipion:</h2>
 				{description}
 				{this.renderScripts(scripts)}
-				{this.renderDependencies(project)}
+				<DependenciesSection project={project} />
 			</div>
 		)
 	}
@@ -72,78 +75,5 @@ export default class Project extends React.Component<
 				</div>
 			)
 		}
-	}
-
-	renderDependencies(project: IProject) {
-		const prod = this.renderDeps(
-			'prod',
-			project.pkg && project.pkg.dependencies
-		)
-		const dev = this.renderDeps(
-			'dev',
-			project.pkg && project.pkg.devDependencies
-		)
-		const peer = this.renderDeps(
-			'peer',
-			// @ts-ignore
-			project.pkg && project.pkg.peerDependencies
-		)
-		const opts = this.renderDeps(
-			'opts',
-			// @ts-ignore
-			project.pkg && project.pkg.optionalDependencies
-		)
-
-		if (!prod && !dev && !peer && !opts) {
-			return (
-				<div>
-					<i>no dependencies</i>
-				</div>
-			)
-		}
-
-		return (
-			<div>
-				<h3>Dependencies</h3>
-				{prod}
-				{dev}
-				{peer}
-				{opts}
-			</div>
-		)
-	}
-
-	renderDeps(
-		title: string,
-		dependencies: { [pkg: string]: string } | null | undefined
-	) {
-		if (!dependencies) {
-			return
-		}
-
-		const deps = Object.entries(dependencies).map(([pkg, version]) =>
-			this.renderDep(pkg, version)
-		)
-
-		return (
-			<>
-				<h4>{title}</h4>
-				<ul>{deps}</ul>
-			</>
-		)
-	}
-
-	renderDep(pkg: string, version: string) {
-		const result = resolve(pkg, version)
-		const { name, rawSpec, type } = result
-
-		return (
-			<li
-				// @ts-ignore bad typing
-				key={name}
-			>
-				{rawSpec}: {name} - {type}
-			</li>
-		)
 	}
 }
