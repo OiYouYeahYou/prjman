@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { exists, readFile } from 'fs'
 import ReactMarkdown = require('react-markdown')
-import { OpenInEditor } from './OpenInEditor'
+import { OpenInEditor } from '../components/OpenInEditor'
 import { join } from 'path'
 import { getProject } from '../projects'
 import { RouteComponentProps, Link } from 'react-router-dom'
 
-export interface ReadmeProps
+export interface ReadmePageProps
 	extends RouteComponentProps<{ projectid: string }> {}
 
 interface ReadmeState {
@@ -17,8 +17,8 @@ interface ReadmeState {
 	unmounted?: boolean
 }
 
-export class Readme extends React.Component<ReadmeProps, ReadmeState> {
-	constructor(props: ReadmeProps) {
+export class ReadmePage extends React.Component<ReadmePageProps, ReadmeState> {
+	constructor(props: ReadmePageProps) {
 		super(props)
 
 		const project = getProject(this.props.match.params.projectid)

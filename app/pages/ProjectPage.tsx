@@ -2,21 +2,21 @@ import * as React from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { resolve, Result } from 'npm-package-arg'
 
-import { OpenInEditor } from './OpenInEditor'
-import { Script } from './Script'
+import { OpenInEditor } from '../components/OpenInEditor'
+import { Script } from '../components/Script'
 import { getProject, PackageJSON, IProject } from '../projects'
 import { StoreEnhancer } from 'redux'
-import { DependencyItem } from './dependency-list-item'
-import { DependenciesSection } from './dependency-list-section'
+import { DependencyItem } from '../components/dependency-list-item'
+import { DependenciesSection } from '../components/dependency-list-section'
 
-export interface ProjectProps
+export interface ProjectPageProps
 	extends RouteComponentProps<{ projectid: string }> {}
 
-interface ProjectState {}
+interface ProjectPageState {}
 
-export default class Project extends React.Component<
-	ProjectProps,
-	ProjectState
+export class ProjectPage extends React.Component<
+	ProjectPageProps,
+	ProjectPageState
 > {
 	get id() {
 		return this.props.match.params.projectid
