@@ -5,9 +5,7 @@ import { resolve, Result } from 'npm-package-arg'
 import { OpenInEditor } from '../components/OpenInEditor'
 import { Script } from '../components/Script'
 import { getProject, PackageJSON, IProject } from '../projects'
-import { StoreEnhancer } from 'redux'
-import { DependencyItem } from '../components/dependency-list-item'
-import { DependenciesSection } from '../components/dependency-list-section'
+import { DependenciesSection } from '../components/dependencies/list-section'
 
 export interface ProjectPageProps
 	extends RouteComponentProps<{ projectid: string }> {}
@@ -69,10 +67,10 @@ export class ProjectPage extends React.Component<
 
 		if (scriptElements.length) {
 			return (
-				<div>
+				<>
 					<h3>scripts</h3>
-					{scriptElements}
-				</div>
+					<ul>{scriptElements}</ul>
+				</>
 			)
 		}
 	}

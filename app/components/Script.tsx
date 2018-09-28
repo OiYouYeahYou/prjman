@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { HiderItem } from './HiderItem'
 
 interface IScriptProps {
 	name: string
@@ -23,16 +24,22 @@ export class Script extends React.Component<IScriptProps, IScriptState> {
 	}
 
 	render() {
-		return (
-			<div>
-				<a onClick={() => this.toggleVisible()}>{this.props.name}</a>
-				{' - '}
+		const link = (
+			<a onClick={() => this.toggleVisible()}>{this.props.name}</a>
+		)
+		const buttons = (
+			<>
 				<button onClick={() => alert('computer says no')}>
 					Run Once
 				</button>
 				<button onClick={() => alert('computer says no')}>
 					Run with Watcher
 				</button>
+			</>
+		)
+
+		return (
+			<HiderItem visible={link} hidden={buttons}>
 				{this.state.isVisible ? (
 					<div
 						style={{
@@ -46,7 +53,7 @@ export class Script extends React.Component<IScriptProps, IScriptState> {
 				) : (
 					''
 				)}
-			</div>
+			</HiderItem>
 		)
 	}
 }
