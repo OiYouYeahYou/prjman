@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { resolve, Result } from 'npm-package-arg'
 
 import { OpenInEditor } from '../components/OpenInEditor'
 import { Script } from '../components/Script'
 import { getProject, PackageJSON, IProject } from '../projects'
 import { DependenciesSection } from '../components/dependencies/list-section'
+import { PageSection } from '../components/PageSection'
 
 export interface ProjectPageProps
 	extends RouteComponentProps<{ projectid: string }> {}
@@ -50,10 +50,11 @@ export class ProjectPage extends React.Component<
 		return (
 			<div>
 				<h2>Name: {name}</h2>
+
 				<OpenInEditor path={path}>Open in Editor</OpenInEditor>
 				<Link to={`/readme/${this.id}`}>Readme</Link>
-				<h2>Descrtipion:</h2>
-				{description}
+
+				<PageSection title="Description">{description}</PageSection>
 				{this.renderScripts(scripts)}
 				<DependenciesSection project={project} />
 			</div>
@@ -67,10 +68,11 @@ export class ProjectPage extends React.Component<
 
 		if (scriptElements.length) {
 			return (
-				<>
-					<h3>scripts</h3>
-					<ul>{scriptElements}</ul>
-				</>
+				<PageSection title="Scripts">
+					<small>
+						<ul>{scriptElements}</ul>
+					</small>
+				</PageSection>
 			)
 		}
 	}
