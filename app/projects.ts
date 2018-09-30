@@ -10,10 +10,14 @@ export interface PackageJSON {
 	name?: string
 	description?: string
 	scripts?: { [name: string]: string }
-	dependencies?: { [pkg: string]: string }
-	devDependencies?: { [pkg: string]: string }
-	peerDependencies?: { [pkg: string]: string }
-	optionalDependencies?: { [pkg: string]: string }
+	dependencies?: DependencyObj
+	devDependencies?: DependencyObj
+	peerDependencies?: DependencyObj
+	optionalDependencies?: DependencyObj
+}
+
+export interface DependencyObj {
+	[pkg: string]: string
 }
 
 export interface IProject {
