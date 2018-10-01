@@ -27,16 +27,14 @@ export class Script extends React.Component<IScriptProps, IScriptState> {
 		const link = (
 			<a onClick={() => this.toggleVisible()}>{this.props.name}</a>
 		)
-		const buttons = (
-			<>
-				<button onClick={() => alert('computer says no')}>
-					Run Once
-				</button>
-				<button onClick={() => alert('computer says no')}>
-					Run with Watcher
-				</button>
-			</>
-		)
+		const buttons = [
+			<button key="run-once" onClick={() => alert('computer says no')}>
+				Run Once
+			</button>,
+			<button key="run-watcher" onClick={() => alert('computer says no')}>
+				Run with Watcher
+			</button>,
+		]
 
 		return (
 			<HiderItem visible={link} hidden={buttons}>

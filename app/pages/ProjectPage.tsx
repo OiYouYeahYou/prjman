@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import { OpenInEditor } from '../components/OpenInEditor'
 import { Script } from '../components/Script'
 import { getProject, PackageJSON, IProject } from '../projects'
-import { DependenciesSection } from '../components/dependencies/list-section'
+import { DependenciesSection } from '../components/dependencies/Section'
 import { PageSection } from '../components/PageSection'
 
 export interface ProjectPageProps
