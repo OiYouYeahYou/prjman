@@ -1,33 +1,19 @@
 import { readdirSync, lstatSync, readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 import { homedir } from 'os'
+import { resolve } from 'npm-package-arg'
+import { Project, PackageJSON } from './structures/Project'
 
-export interface IProjects {
-	[id: string]: IProject
-}
-
-export interface PackageJSON {
-	name?: string
-	description?: string
-	scripts?: { [name: string]: string }
-	dependencies?: DependencyObj
-	devDependencies?: DependencyObj
-	peerDependencies?: DependencyObj
-	optionalDependencies?: DependencyObj
+export interface IProjectStore {
+	[id: string]: Project
 }
 
 export interface DependencyObj {
 	[pkg: string]: string
 }
 
-export interface IProject {
-	id: string
-	path: string
-	pkg: PackageJSON | null
-}
-
 export const projects = (() => {
-	const projects: IProjects = {}
+	const projects: IProjectStore = {}
 	const codePath = join(homedir(), 'code')
 
 	readdirSync(codePath).forEach(id => {
@@ -37,13 +23,10 @@ export const projects = (() => {
 			return
 		}
 
-		const pkg = readJSON(join(path, 'package.json'))
+		const pkg =
+			readJSON<PackageJSON>(join(path, 'package.json')) || undefined
 
-		projects[id] = {
-			id,
-			path,
-			pkg,
-		}
+		projects[id] = Project.create({ id, path, pkg })
 	})
 
 	return projects
@@ -55,10 +38,6 @@ export const projectEntries = Object.entries(projects).sort(([a], [b]) =>
 
 export function getProject(id: string) {
 	return projects[id]
-}
-
-export function getPath(id: string) {
-	return projects[id].path
 }
 
 function readJSON<T = {}>(path: string): T | null {

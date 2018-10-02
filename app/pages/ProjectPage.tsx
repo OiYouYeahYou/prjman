@@ -3,9 +3,10 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 
 import { OpenInEditor } from '../components/OpenInEditor'
 import { Script } from '../components/Script'
-import { getProject, PackageJSON, IProject } from '../projects'
+import { getProject } from '../projects'
 import { DependenciesSection } from '../components/dependencies/Section'
 import { PageSection } from '../components/PageSection'
+import { Project } from '../structures/Project'
 
 export interface ProjectPageProps
 	extends RouteComponentProps<{ projectid: string }> {}
@@ -39,17 +40,20 @@ export class ProjectPage extends React.Component<
 		)
 	}
 
-	renderProject(project: IProject) {
-		const { pkg, path } = project
+	renderProject(project: Project) {
 		const {
-			name = this.id,
+			path,
+			name,
+			version,
 			description = <i>no description</i>,
-			scripts = {},
-		} = pkg || ({} as PackageJSON)
+			scripts,
+		} = project
 
 		return (
 			<div>
-				<h2>Name: {name}</h2>
+				<h2>
+					Name: {name} <small>{version}</small>
+				</h2>
 
 				<OpenInEditor path={path}>Open in Editor</OpenInEditor>
 				<Link to={`/readme/${this.id}`}>Readme</Link>

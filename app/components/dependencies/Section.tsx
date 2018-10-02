@@ -1,21 +1,15 @@
 import * as React from 'react'
 import { resolve, Result } from 'npm-package-arg'
 
-import { IProject } from '../../projects'
+import { Project, dependencyKeys } from '../../structures/Project'
 import { PageSection } from '../PageSection'
 import { DependencyItem } from './Item'
 
 export interface DepsSectionProps {
-	project: IProject
+	project: Project
 }
 
 interface DepsSectionState {}
-
-type dependencyKeys =
-	| 'dependencies'
-	| 'devDependencies'
-	| 'peerDependencies'
-	| 'optionalDependencies'
 
 interface ScopedProjects {
 	[scope: string]: Result[]
@@ -47,8 +41,7 @@ export class DependenciesSection extends React.Component<
 	}
 
 	renderDepsSubSection(title: string, key: dependencyKeys) {
-		const { pkg } = this.props.project
-		const dependencies = pkg && pkg[key]
+		const dependencies = this.props.project.getDependencies(key)
 
 		if (!dependencies) {
 			return
