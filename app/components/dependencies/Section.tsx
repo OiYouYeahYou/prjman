@@ -4,6 +4,7 @@ import { resolve, Result } from 'npm-package-arg'
 import { Project, dependencyKeys } from '../../structures/Project'
 import { PageSection } from '../PageSection'
 import { DependencyItem } from './Item'
+import ProjectDependencyInstaller from '../ProjectDependencyInstaller'
 
 export interface DepsSectionProps {
 	project: Project
@@ -37,7 +38,13 @@ export class DependenciesSection extends React.Component<
 			return null
 		}
 
-		return <PageSection title="Dependencies">{sections}</PageSection>
+		return (
+			<PageSection title="Dependencies">
+				<ProjectDependencyInstaller project={this.props.project} />
+				<br />
+				{sections}
+			</PageSection>
+		)
 	}
 
 	renderDepsSubSection(title: string, key: dependencyKeys) {
@@ -119,17 +126,6 @@ export class DependenciesSection extends React.Component<
 	}
 
 	item(name: string, result: Result) {
-		// // prettier-ignore
-		// const text = <><b>{name}</b> <i><small>{rawSpec}</small></i></>
-
-		// return <HiderItem key={name} visible={text} hidden={buttons} />
 		return <DependencyItem name={name} key={name} result={result} />
 	}
 }
-
-const buttons = (
-	<>
-		<button>get</button>
-		<button>readme</button>
-	</>
-)
