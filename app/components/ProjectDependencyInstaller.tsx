@@ -1,15 +1,9 @@
 import * as React from 'react'
 import { Project } from '../structures/Project'
-
-const validatePackageName: (
-	input: string
-) => {
-	validForNewPackages: boolean
-	validForOldPackages: boolean
-	warnings: string[]
-	errors: string[]
-	// tslint:disable-next-line:no-var-requires
-} = require('validate-npm-package-name')
+import {
+	combinedNameSpecStringListParser,
+	CombinedNameSpecParserResult,
+} from '../utils/npm'
 
 interface ProjectDependencyInstallerProps {
 	project: Project
@@ -19,12 +13,12 @@ interface ProjectDependencyInstallerState {
 	value: string
 	type: string
 	resolution: string
-	validity: boolean
 }
 
 const selectOptions = [
 	{
 		display: 'Production',
+		isDefault: true,
 		value: 'dependencies',
 	},
 	{
@@ -51,25 +45,20 @@ export default class ProjectDependencyInstaller extends React.Component<
 		this.state = {
 			resolution: 'nothing to see',
 			type: 'bitbucket',
-			validity: false,
 			value: '',
 		}
 	}
 
 	handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-		const validity = validatePackageName(event.target.value)
-
-		console.log(validity)
-
 		this.setState({
-			validity:
-				validity.validForNewPackages || validity.validForOldPackages,
 			value: event.target.value,
 		})
 	}
 
 	handleSelectChange(event: React.ChangeEvent<HTMLInputElement>) {
-		this.setState({ type: event.target.value })
+		this.setState({
+			type: event.target.value,
+		})
 	}
 
 	handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -77,8 +66,16 @@ export default class ProjectDependencyInstaller extends React.Component<
 
 		alert('pretending to get: ' + value)
 
-		this.setState({ value: '' })
+		this.setState({
+			value: '',
+		})
 		event.preventDefault()
+	}
+
+	splitter(value = this.state.value) {
+		return combinedNameSpecStringListParser(value).filter(
+			Boolean
+		) as CombinedNameSpecParserResult[]
 	}
 
 	render() {
@@ -88,12 +85,11 @@ export default class ProjectDependencyInstaller extends React.Component<
 					<input
 						type={'text'}
 						value={this.state.value}
+						style={{ width: '24em' }}
 						onChange={event => this.handleInputChange(event)}
 					/>
 
-					<button type="submit" disabled={!this.state.validity}>
-						Install
-					</button>
+					<button type="submit">Install</button>
 				</div>
 
 				<div style={{ fontSize: 'small' }}>{this.renderOptions()}</div>
@@ -102,13 +98,14 @@ export default class ProjectDependencyInstaller extends React.Component<
 	}
 
 	renderOptions() {
-		return selectOptions.map(({ value, display }) => (
+		return selectOptions.map(({ value, display, isDefault }) => (
 			<label key={value} style={this.typeSelectorStyle(value)}>
 				<input
 					type="radio"
 					name="dependency-install-type"
 					value={value}
 					onChange={event => this.handleSelectChange(event)}
+					checked={isDefault || false}
 				/>
 				{' ' + display + ' '}
 			</label>

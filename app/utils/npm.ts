@@ -1,11 +1,12 @@
 // tslint:disable:no-var-requires
 
 import { RegistryResponse } from './npm-registry-response'
+import { resolve, Result } from 'npm-package-arg'
 
 const npmFetch: {
 	json(path: string): Promise<RegistryResponse>
 } = require('npm-registry-fetch')
-const _validatePackageName: (
+export const validatePackageName: (
 	input: string
 ) => {
 	validForNewPackages: boolean
@@ -14,12 +15,6 @@ const _validatePackageName: (
 	errors: string[]
 } = require('validate-npm-package-name')
 
-export function validatePackageName(name: string) {
-	const result = _validatePackageName(name)
-
-	return result.validForNewPackages || result.validForOldPackages
-}
-
 export async function fetchPackageInfo(name: string) {
 	const pkg = await npmFetch.json(name).catch(() => {})
 
@@ -27,7 +22,11 @@ export async function fetchPackageInfo(name: string) {
 }
 
 export async function getPackageInfo(name: string) {
-	if (!validatePackageName(name)) {
+	const { validForNewPackages, validForOldPackages } = validatePackageName(
+		name
+	)
+
+	if (!validForNewPackages && !validForOldPackages) {
 		return Promise.resolve()
 	}
 
@@ -42,4 +41,58 @@ export async function getPackageRepo(name: string) {
 	}
 
 	return pkg.repository
+}
+
+export interface CombinedNameSpecParserResult {
+	name: string
+	spec: string
+	initialValue: string
+	installString: string
+	resolution: Result
+}
+
+export function combinedNameSpecStringListParser(value: string) {
+	return value.split(',').map(combinedNameSpecParser)
+}
+
+export function combinedNameSpecParser(
+	initialValue: string
+): CombinedNameSpecParserResult | undefined {
+	let isScoped = false
+	initialValue = initialValue.trim()
+
+	if (initialValue[0] === '@') {
+		isScoped = true
+		initialValue = initialValue.substring(1)
+	}
+
+	const stringParts = initialValue.split('@').map(v => v.trim())
+	const { length } = stringParts
+
+	if (!(length === 1 || length === 2)) {
+		return
+	}
+
+	let [name, spec] = stringParts
+
+	if (isScoped) {
+		name = '@' + name
+	}
+
+	const { validForNewPackages, validForOldPackages } = validatePackageName(
+		name
+	)
+
+	if (!validForNewPackages && !validForOldPackages) {
+		return
+	}
+
+	try {
+		const resolution = resolve(name, spec)
+		const installString = name + (spec ? `@${spec}` : '')
+
+		return { name, spec, initialValue, resolution, installString }
+	} catch (error) {
+		return
+	}
 }
