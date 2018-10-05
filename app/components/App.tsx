@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
+import { HeaderMenuItem } from './HeaderMenuLink'
 
 export default class App extends React.Component {
 	render() {
 		return (
 			<div>
-				<Link to="/">home</Link>
+				<HeaderMenuItem to="/" text="home" />
 				<div>{this.props.children}</div>
 			</div>
 		)
