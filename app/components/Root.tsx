@@ -9,6 +9,7 @@ import App from './App'
 import { HomePage } from '../pages/HomePage'
 import { ProjectPage } from '../pages/ProjectPage'
 import { ReadmePage } from '../pages/ReadmePage'
+import { SettingsPage } from '../pages/Settings'
 
 interface IRootType {
 	store: Redux.Store<any>
@@ -29,6 +30,7 @@ export default function Root({ store, history }: IRootType) {
 							path="/readme/:projectid/"
 							component={ReadmePage}
 						/>
+						<Route path="/settings/" component={SettingsPage} />
 						<Route path="/" component={HomePage} />
 					</Switch>
 				</App>

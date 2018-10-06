@@ -6,6 +6,7 @@ export default class App extends React.Component {
 		return (
 			<div>
 				<HeaderMenuItem to="/" text="home" />
+				<HeaderMenuItem to="/settings" text="settings" />
 				<div>{this.props.children}</div>
 			</div>
 		)
