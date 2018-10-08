@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { HiderItem } from './HiderItem'
+import { settings } from '../settings'
+
+const { paths } = settings
 
 export interface PathListProps {}
 
 interface PathListState {
-	paths: string[]
 	newPath: string
+	pathsListener?: () => void
 }
 
 export class PathList extends React.Component<PathListProps, PathListState> {
@@ -16,7 +19,6 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 
 		this.state = {
 			newPath: '',
-			paths: ['~/code/'],
 		}
 	}
 
@@ -26,12 +28,26 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 		}
 	}
 
+	componentWillMount() {
+		const pathsListener = () => this.forceUpdate()
+
+		paths.on('change', pathsListener)
+		this.setState({ pathsListener })
+	}
+
+	componentWillUnmount() {
+		if (this.state.pathsListener) {
+			paths.removeListener('change', this.state.pathsListener)
+			this.setState({ pathsListener: undefined })
+		}
+	}
+
 	submit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault()
 
 		const path = this.state.newPath
 
-		if (this.state.paths.indexOf(path) !== -1) {
+		if (paths.has(path)) {
 			return
 		}
 
@@ -39,10 +55,8 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 			return
 		}
 
-		this.setState({
-			newPath: '',
-			paths: this.state.paths.concat(path).sort(),
-		})
+		this.setState({ newPath: '' })
+		paths.add(path)
 	}
 
 	change({ target: { value } }: React.ChangeEvent<HTMLInputElement>) {
@@ -77,7 +91,7 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 	}
 
 	renderPaths() {
-		return this.state.paths.map((path, i) => (
+		return paths.map((path, i) => (
 			<HiderItem
 				key={path + '-' + i}
 				visible={path}
