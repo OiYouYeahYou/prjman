@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { HiderItem } from './HiderItem'
 import { settings } from '../settings'
+import { ReadablePath } from './ReadablePath'
 
 const { paths } = settings
 
@@ -42,7 +43,7 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 		}
 	}
 
-	submit(event: React.FormEvent<HTMLFormElement>) {
+	submitNewPath(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault()
 
 		const path = this.state.newPath
@@ -59,10 +60,8 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 		paths.add(path)
 	}
 
-	change({ target: { value } }: React.ChangeEvent<HTMLInputElement>) {
-		this.setState({
-			newPath: value,
-		})
+	inputChange(event: React.ChangeEvent<HTMLInputElement>) {
+		this.setState({ newPath: event.target.value })
 	}
 
 	render() {
@@ -77,11 +76,11 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 	renderAdderItem() {
 		return (
 			<li>
-				<form onSubmit={event => this.submit(event)}>
+				<form onSubmit={event => this.submitNewPath(event)}>
 					<input
 						ref={input => (this.nameInput = input)}
 						type="text"
-						onChange={event => this.change(event)}
+						onChange={event => this.inputChange(event)}
 						value={this.state.newPath}
 					/>
 					<button>Add</button>
@@ -94,8 +93,10 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 		return paths.map((path, i) => (
 			<HiderItem
 				key={path + '-' + i}
-				visible={path}
-				hidden={<button type="submit">remove</button>}
+				visible={<ReadablePath path={path} />}
+				hidden={
+					<button onClick={() => paths.remove(path)}>remove</button>
+				}
 			/>
 		))
 	}

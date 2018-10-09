@@ -1,7 +1,9 @@
 import { EventEmitter } from 'events'
 
 export declare interface EmittingSet<T> {
-	on(event: 'change', listener: (value: T) => void): this
+	on(event: 'change', listener: () => void): this
+	on(event: 'add', listener: (value: T) => void): this
+	on(event: 'remove', listener: (value: T) => void): this
 }
 
 export class EmittingSet<T> extends EventEmitter {
@@ -23,12 +25,21 @@ export class EmittingSet<T> extends EventEmitter {
 			this._data.push(value)
 
 			if (!noEmit) {
-				this._emitChange(value)
+				this._emitChange('add', value)
 			}
 		}
 	}
 
 	sort() {}
+	remove(value: T) {
+		const index = this._data.indexOf(value)
+
+		if (index > -1) {
+			this._data.splice(index, 1)
+			this._emitChange('remove', value)
+		}
+	}
+
 
 	has(value: T) {
 		return this._data.includes(value)
@@ -38,9 +49,9 @@ export class EmittingSet<T> extends EventEmitter {
 		return this._data.map((val, i) => fn(val, i))
 	}
 
-	remove(value: T) {}
 
-	private _emitChange(value?: T) {
-		this.emit('change', value)
+	private _emitChange(type: 'add' | 'remove', value?: T) {
+		this.emit(type, value)
+		this.emit('change')
 	}
 }
