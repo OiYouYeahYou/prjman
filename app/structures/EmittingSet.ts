@@ -30,7 +30,6 @@ export class EmittingSet<T> extends EventEmitter {
 		}
 	}
 
-	sort() {}
 	remove(value: T) {
 		const index = this._data.indexOf(value)
 
@@ -40,6 +39,9 @@ export class EmittingSet<T> extends EventEmitter {
 		}
 	}
 
+	sort(fn?: (a: T, b: T) => number) {
+		this._data.sort(fn)
+	}
 
 	has(value: T) {
 		return this._data.includes(value)
@@ -49,6 +51,11 @@ export class EmittingSet<T> extends EventEmitter {
 		return this._data.map((val, i) => fn(val, i))
 	}
 
+	forEach(fn: (val: T, i: number) => void) {
+		this._data.forEach((val: T, i: number) => fn(val, i))
+
+		return this
+	}
 
 	private _emitChange(type: 'add' | 'remove', value?: T) {
 		this.emit(type, value)
