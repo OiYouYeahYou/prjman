@@ -1,5 +1,7 @@
 import { Settings } from './structures/Settings'
+import { join } from 'path'
+import { homedir } from 'os'
 
 export const settings = new Settings({
-	paths: ['~/code/'],
+	paths: [join(homedir(), 'code')],
 })

@@ -5,7 +5,7 @@ interface IOptions {
 }
 
 export class Settings {
-	readonly paths = new EmittingSet()
+	readonly paths = new EmittingSet<string>()
 
 	constructor(options: IOptions) {
 		options.paths.map(path => this.paths.add(path, true))
