@@ -2,6 +2,12 @@ import * as React from 'react'
 import { HiderItem } from './HiderItem'
 import { settings } from '../settings'
 import { ReadablePath } from './ReadablePath'
+import {
+	normalise,
+	convertToAbsolute,
+	exists,
+	isDirectory,
+} from '../utils/fsPath'
 
 const { paths } = settings
 
@@ -9,16 +15,27 @@ export interface PathListProps {}
 
 interface PathListState {
 	newPath: string
+	disabled: boolean
+	error?: string
 	pathsListener?: () => void
+}
+
+enum sumbitErrors {
+	ERROR_BLANK = 'path is blank',
+	ERROR_ALREADY_COLLECTION = 'already exists',
+	ERROR_NO_EXISTS = 'does not exist',
+	ERROR_NOT_DIRECTORY = 'is not directory',
 }
 
 export class PathList extends React.Component<PathListProps, PathListState> {
 	nameInput: HTMLInputElement | null
+	timer: any
 
 	constructor(props: PathListProps) {
 		super(props)
 
 		this.state = {
+			disabled: false,
 			newPath: '',
 		}
 	}
@@ -43,25 +60,39 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 		}
 	}
 
-	submitNewPath(event: React.FormEvent<HTMLFormElement>) {
+	async submitNewPath(event: React.FormEvent<HTMLFormElement>) {
+		this.setState({ disabled: true })
 		event.preventDefault()
 
-		const path = this.state.newPath
+		const path = normalise(this.state.newPath)
 
-		if (paths.has(path)) {
-			return
+		if (!path) {
+			this.setError(sumbitErrors.ERROR_BLANK)
+		} else if (paths.has(path)) {
+			this.setError(sumbitErrors.ERROR_ALREADY_COLLECTION)
+		} else if (!(await exists(path))) {
+			this.setError(sumbitErrors.ERROR_NO_EXISTS)
+		} else if (!(await isDirectory(path))) {
+			this.setError(sumbitErrors.ERROR_NOT_DIRECTORY)
+		} else {
+			this.setState({ newPath: '' })
+			paths.add(path)
 		}
 
-		if (!isValidPath(path)) {
-			return
-		}
+		this.setState({ disabled: false })
+	}
 
-		this.setState({ newPath: '' })
-		paths.add(path)
+	setError(error: string) {
+		clearTimeout(this.timer)
+		this.setState({ error })
+		this.timer = setTimeout(
+			() => this.setState({ error: undefined }),
+			10 * 1000
+		)
 	}
 
 	inputChange(event: React.ChangeEvent<HTMLInputElement>) {
-		this.setState({ newPath: event.target.value })
+		this.setState({ newPath: convertToAbsolute(event.target.value) })
 	}
 
 	render() {
@@ -82,8 +113,12 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 						type="text"
 						onChange={event => this.inputChange(event)}
 						value={this.state.newPath}
+						disabled={this.state.disabled}
 					/>
-					<button>Add</button>
+					<button type="submit" disabled={this.state.disabled}>
+						Add
+					</button>
+					{this.state.error ? <div>{this.state.error}</div> : ''}
 				</form>
 			</li>
 		)
@@ -101,5 +136,3 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 		))
 	}
 }
-
-const isValidPath = (path: string) => true
