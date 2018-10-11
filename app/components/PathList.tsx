@@ -9,7 +9,7 @@ import {
 	isDirectory,
 } from '../utils/fsPath'
 
-const { paths } = settings
+const { collections } = settings
 
 export interface PathListProps {}
 
@@ -49,13 +49,13 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 	componentWillMount() {
 		const pathsListener = () => this.forceUpdate()
 
-		paths.on('change', pathsListener)
+		collections.on('change', pathsListener)
 		this.setState({ pathsListener })
 	}
 
 	componentWillUnmount() {
 		if (this.state.pathsListener) {
-			paths.removeListener('change', this.state.pathsListener)
+			collections.removeListener('change', this.state.pathsListener)
 			this.setState({ pathsListener: undefined })
 		}
 	}
@@ -68,7 +68,7 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 
 		if (!path) {
 			this.setError(sumbitErrors.ERROR_BLANK)
-		} else if (paths.has(path)) {
+		} else if (collections.has(path)) {
 			this.setError(sumbitErrors.ERROR_ALREADY_COLLECTION)
 		} else if (!(await exists(path))) {
 			this.setError(sumbitErrors.ERROR_NO_EXISTS)
@@ -76,7 +76,7 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 			this.setError(sumbitErrors.ERROR_NOT_DIRECTORY)
 		} else {
 			this.setState({ newPath: '' })
-			paths.add(path)
+			collections.add(path)
 		}
 
 		this.setState({ disabled: false })
@@ -125,12 +125,14 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 	}
 
 	renderPaths() {
-		return paths.map((path, i) => (
+		return collections.map((path, i) => (
 			<HiderItem
 				key={path + '-' + i}
 				visible={<ReadablePath path={path} />}
 				hidden={
-					<button onClick={() => paths.remove(path)}>remove</button>
+					<button onClick={() => collections.remove(path)}>
+						remove
+					</button>
 				}
 			/>
 		))
