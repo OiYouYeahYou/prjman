@@ -20,13 +20,19 @@ export type dependencyKeys =
 	| 'optionalDependencies'
 
 export class Project {
-	static create(options: { id: string; path: string; pkg?: PackageJSON }) {
+	static create(options: {
+		id: string
+		path: string
+		pkg: PackageJSON | void
+		parentCollection: string
+	}) {
 		return Object.assign(new this(), options)
 	}
 
 	id: string
 	path: string
 	pkg?: PackageJSON
+	parentCollection: string
 
 	private _description: string
 

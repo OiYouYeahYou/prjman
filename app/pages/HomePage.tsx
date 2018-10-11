@@ -10,7 +10,7 @@ export class HomePage extends React.Component<{}, {}> {
 				<h1>Welcome to prjman</h1>
 				<RemoteGetter />
 				<ul>
-					{projectEntries.map(([name]) => (
+					{projectEntries().map(([name]) => (
 						<li key={name}>
 							<Link to={`/project/${name}`}>{name}</Link>
 						</li>
