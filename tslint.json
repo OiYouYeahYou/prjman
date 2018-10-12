@@ -35,8 +35,26 @@
 				"esSpecCompliant": true
 			}
 		],
+		"member-ordering": [
+			true,
+			{
+				"order": [
+					"public-instance-field",
+					"private-instance-field",
+					"public-constructor",
+					"private-constructor",
+					"public-instance-method",
+					"protected-instance-method",
+					"private-instance-method",
+					"public-static-field",
+					"private-static-field"
+				]
+			}
+		],
 		"ordered-imports": false,
-		"max-classes-per-file": false
+		"object-literal-sort-keys": false,
+		"max-classes-per-file": false,
+		"unified-signatures": false
 	},
 	"rulesDirectory": []
 }
