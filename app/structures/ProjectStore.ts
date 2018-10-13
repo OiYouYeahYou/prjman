@@ -46,9 +46,7 @@ export class ProjectStore extends EventEmitter {
 
 		return Promise.all(proms)
 			.catch(console.error.bind(console))
-			.then(() => {
-				this.isReady = true
-			})
+			.then(() => this.setReady())
 	}
 
 	private async lookForProject(parentCollection: string, file: string) {
@@ -76,5 +74,10 @@ export class ProjectStore extends EventEmitter {
 				}
 			}
 		)
+	}
+
+	private setReady() {
+		this.isReady = true
+		this.emit('ready')
 	}
 }

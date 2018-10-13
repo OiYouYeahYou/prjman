@@ -5,10 +5,14 @@ import RemoteGetter from '../components/RemoteGetter'
 
 export class HomePage extends React.Component<{}, {}> {
 	render() {
-		return (
-			<div>
-				<h1>Welcome to prjman</h1>
-				<RemoteGetter />
+		let list
+
+		if (!projectStore.isReady) {
+			projectStore.once('ready', () => this.forceUpdate())
+
+			list = <b>loading project data</b>
+		} else {
+			list = (
 				<ul>
 					{projectStore.entries().map(([name]) => (
 						<li key={name}>
@@ -16,6 +20,14 @@ export class HomePage extends React.Component<{}, {}> {
 						</li>
 					))}
 				</ul>
+			)
+		}
+
+		return (
+			<div>
+				<h1>Welcome to prjman</h1>
+				<RemoteGetter />
+				{list}
 			</div>
 		)
 	}
