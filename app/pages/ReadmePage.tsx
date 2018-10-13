@@ -3,7 +3,7 @@ import { exists, readFile } from 'fs'
 import ReactMarkdown = require('react-markdown')
 import { OpenInEditor } from '../components/OpenInEditor'
 import { join } from 'path'
-import { getProject } from '../projects'
+import { projectStore } from '../projects'
 import { RouteComponentProps, Link } from 'react-router-dom'
 
 export interface ReadmePageProps
@@ -21,7 +21,9 @@ export class ReadmePage extends React.Component<ReadmePageProps, ReadmeState> {
 	constructor(props: ReadmePageProps) {
 		super(props)
 
-		const project = getProject(this.props.match.params.projectid)
+		const project = projectStore.getProject(
+			this.props.match.params.projectid
+		)
 		this.state = {
 			filename: join(project.path, 'README.md'),
 		}

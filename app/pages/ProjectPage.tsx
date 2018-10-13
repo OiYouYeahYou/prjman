@@ -3,7 +3,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 
 import { OpenInEditor } from '../components/OpenInEditor'
 import { Script } from '../components/Script'
-import { getProject } from '../projects'
+import { projectStore } from '../projects'
 import { DependenciesSection } from '../components/dependencies/Section'
 import { PageSection } from '../components/PageSection'
 import { Project } from '../structures/Project'
@@ -22,7 +22,7 @@ export class ProjectPage extends React.Component<
 	}
 
 	render() {
-		const project = getProject(this.id)
+		const project = projectStore.getProject(this.id)
 
 		if (project) {
 			return this.renderProject(project)
