@@ -106,7 +106,7 @@ export class ReadmePage extends React.Component<ReadmePageProps, ReadmeState> {
 	renderReadme() {
 		const { readmeString } = this.state
 
-		if (readmeString) {
+		if (!readmeString) {
 			return <i>readme is blank</i>
 		}
 
