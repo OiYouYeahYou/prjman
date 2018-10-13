@@ -5,22 +5,23 @@ import RemoteGetter from '../components/RemoteGetter'
 
 export class HomePage extends React.Component<{}, {}> {
 	render() {
+		const entries = projectStore.entries()
 		let list
 
 		if (!projectStore.isReady) {
 			projectStore.once('ready', () => this.forceUpdate())
 
 			list = <b>loading project data</b>
+		} else if (entries.length) {
+			const items = entries.map(([name]) => (
+				<li key={name}>
+					<Link to={`/project/${name}`}>{name}</Link>
+				</li>
+			))
+
+			list = <ul>{items}</ul>
 		} else {
-			list = (
-				<ul>
-					{projectStore.entries().map(([name]) => (
-						<li key={name}>
-							<Link to={`/project/${name}`}>{name}</Link>
-						</li>
-					))}
-				</ul>
-			)
+			list = <b>cannot find any projects</b>
 		}
 
 		return (
