@@ -34,9 +34,15 @@ export function readdir(path: string) {
 	)
 }
 
-export function readFile(path: string): Promise<Buffer | void> {
-	return new Promise(resolve =>
-		_readFile(path, (err, data) => resolve(err ? undefined : data))
+export function readFile(path: string): Promise<Buffer> {
+	return new Promise((resolve, reject) =>
+		_readFile(path, (err, data) => {
+			if (err) {
+				reject(err)
+			} else {
+				resolve(data)
+			}
+		})
 	)
 }
 
