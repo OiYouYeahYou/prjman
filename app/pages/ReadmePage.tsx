@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { exists, readFile } from 'fs'
+import { exists, readFile } from '../utils/fsPath'
 import ReactMarkdown = require('react-markdown')
 import { OpenInEditor } from '../components/OpenInEditor'
 import { join } from 'path'
@@ -13,46 +13,117 @@ interface ReadmeState {
 	filename: string
 	readmeString?: string
 	error?: any
-	isMissing?: boolean
+	noReadme?: boolean
 	unmounted?: boolean
+	notReady?: boolean
 }
 
-export class ReadmePage extends React.Component<ReadmePageProps, ReadmeState> {
+interface State<T extends States> {
+	state: T
+	unmounted?: boolean
+	filename?: string
+}
+
+type states =
+	| BlankState
+	| NoProject
+	| ReadmeReadState
+	| NonexistantState
+	| ProjectStroeStillLoadingState
+	| LoadingReadmeState
+	| ErroredState
+
+interface BlankState extends State<States.BLANK> {}
+interface NoProject extends State<States.NO_PROJECT_FOUND> {}
+interface ReadmeReadState extends State<States.README_FOUND_AND_READ> {
+	filename: string
+	readmeString: string
+}
+interface NonexistantState extends State<States.NO_README_EXISTS> {
+	filename: string
+}
+interface ProjectStroeStillLoadingState
+	extends State<States.PROJECT_STORE_NOT_READY> {}
+interface LoadingReadmeState extends State<States.LOADING_README> {
+	filename: string
+}
+interface ErroredState extends State<States.ERRORED> {
+	error: any
+	filename: string
+}
+
+enum States {
+	BLANK,
+	NO_PROJECT_FOUND,
+	README_FOUND_AND_READ,
+	NO_README_EXISTS,
+	PROJECT_STORE_NOT_READY,
+	LOADING_README, // Readme exists, but not yet loaded
+	ERRORED,
+}
+
+export class ReadmePage extends React.Component<ReadmePageProps, states> {
 	constructor(props: ReadmePageProps) {
 		super(props)
-
-		const project = projectStore.getProject(
-			this.props.match.params.projectid
-		)
-		this.state = {
-			filename: join(project.path, 'README.md'),
-		}
+		this.state = { state: States.BLANK }
 	}
 
 	componentDidMount() {
-		const { filename } = this.state
-
-		exists(filename, exists => this.existenceHandler(exists))
-	}
-
-	existenceHandler(exists: boolean) {
-		if (this.state.unmounted) {
-			return
-		} else if (!exists) {
-			this.setState({ isMissing: true })
+		if (!projectStore.isReady) {
+			this.setState({ state: States.PROJECT_STORE_NOT_READY })
+			projectStore.once('ready', () => this.xxx())
 		} else {
-			readFile(this.state.filename, (error, data) =>
-				this.fileHandler(error, data)
-			)
+			this.xxx()
 		}
 	}
 
-	fileHandler(error: any, data: Buffer) {
+	async xxx() {
+		const project = projectStore.getProject(
+			this.props.match.params.projectid
+		)
+
+		if (!project) {
+			this.setState({ state: States.NO_PROJECT_FOUND })
+		}
+
+		const filename = join(project.path, 'README.md')
+
+		this.setState({
+			state: States.LOADING_README,
+			filename,
+		})
+
+		const doesExists = await exists(filename)
+
 		if (this.state.unmounted) {
 			return
 		}
 
-		this.setState({ error, readmeString: data.toString() })
+		if (!doesExists) {
+			return this.setState({ state: States.NO_README_EXISTS })
+		}
+
+		readFile(filename)
+			.then(contents =>
+				this.safeSet({
+					state: States.README_FOUND_AND_READ,
+					readmeString: contents.toString(),
+					filename,
+				})
+			)
+			.catch(error =>
+				this.safeSet({
+					state: States.ERRORED,
+					error,
+					filename,
+				})
+			)
+	}
+
+	safeSet(state: states) {
+		if (!this.state.unmounted) {
+			this.setState(state)
+		}
 	}
 
 	componentWillUnmount() {
@@ -65,7 +136,11 @@ export class ReadmePage extends React.Component<ReadmePageProps, ReadmeState> {
 				<Link to={`/project/${this.props.match.params.projectid}`}>
 					Back to project
 				</Link>
-				<OpenInEditor path={this.state.filename} />
+
+				{this.state.filename ? (
+					<OpenInEditor path={this.state.filename} />
+				) : null}
+
 				<div
 					style={{
 						borderColor: 'black',
@@ -80,36 +155,47 @@ export class ReadmePage extends React.Component<ReadmePageProps, ReadmeState> {
 	}
 
 	renderChooser() {
-		if (this.state.isMissing) {
-			return this.renderIsMissing()
-		} else if (this.state.error) {
-			return this.renderError()
-		} else if (typeof this.state.readmeString === 'string') {
-			return this.renderReadme()
-		} else {
-			return this.renderLoading()
+		switch (this.state.state) {
+			case States.README_FOUND_AND_READ: {
+				const { readmeString } = this.state
+
+				if (!readmeString) {
+					return <i>readme is blank</i>
+				}
+
+				return (
+					<ReactMarkdown source={this.state.readmeString} skipHtml />
+				)
+			}
+
+			case States.NO_README_EXISTS:
+				return `cannot find readme at: ${this.state.filename}`
+
+			case States.PROJECT_STORE_NOT_READY:
+				return `Waiting for project data to load`
+
+			case States.LOADING_README:
+				return `loading readme at: ${this.state.filename}`
+
+			case States.ERRORED:
+				return `an error occured when reading readme: ${
+					this.state.filename
+				}`
+
+			case States.BLANK:
+				return `getting some things in order`
+
+			case States.NO_PROJECT_FOUND:
+				return `cannot find the project you are looking for`
+
+			default: {
+				// @ts-ignore
+				const { state } = this.state
+
+				throw new Error(
+					`Unexpected Readme state ${state}: ${States[state]}`
+				)
+			}
 		}
-	}
-
-	renderIsMissing() {
-		return `cannot find readme at: ${this.state.filename}`
-	}
-
-	renderError() {
-		return `an error occured when reading readme: ${this.state.filename}`
-	}
-
-	renderLoading() {
-		return `loading readme at: ${this.state.filename}`
-	}
-
-	renderReadme() {
-		const { readmeString } = this.state
-
-		if (!readmeString) {
-			return <i>readme is blank</i>
-		}
-
-		return <ReactMarkdown source={this.state.readmeString} skipHtml />
 	}
 }
