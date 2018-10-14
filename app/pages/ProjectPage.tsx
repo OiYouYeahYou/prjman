@@ -22,6 +22,12 @@ export class ProjectPage extends React.Component<
 	}
 
 	render() {
+		if (!projectStore.isReady) {
+			projectStore.once('ready', () => this.forceUpdate())
+
+			return this.renderWaitingToLoadProjects()
+		}
+
 		const project = projectStore.getProject(this.id)
 
 		if (project) {
@@ -29,6 +35,10 @@ export class ProjectPage extends React.Component<
 		} else {
 			return this.renderNoProjectFound()
 		}
+	}
+
+	renderWaitingToLoadProjects() {
+		return <b>waiting to load projects</b>
 	}
 
 	renderNoProjectFound() {
