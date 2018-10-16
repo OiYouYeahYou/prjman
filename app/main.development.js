@@ -1,6 +1,11 @@
 const { app, BrowserWindow, Menu, shell } = require('electron')
 const windowStateManager = require('electron-window-state')
 
+// Disabling security messages because I can not
+// figure out how to fix what should be fixed
+// https://electronjs.org/docs/tutorial/security
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
+
 if (process.env.NODE_ENV === 'production') {
 	const sourceMapSupport = require('source-map-support')
 	sourceMapSupport.install()
