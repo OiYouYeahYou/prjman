@@ -78,7 +78,7 @@ app.on('ready', () =>
 		}
 
 		{
-			const template = crreateMenuTemplate()
+			const template = crreateMenuTemplate(mainWindow)
 			const menu = Menu.buildFromTemplate(template)
 
 			if (process.platform === 'darwin') {
@@ -90,7 +90,7 @@ app.on('ready', () =>
 	})
 )
 
-function crreateMenuTemplate() {
+function crreateMenuTemplate(mainWindow) {
 	if (process.platform === 'darwin') {
 		return [
 			{
