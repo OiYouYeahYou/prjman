@@ -1,4 +1,5 @@
 const { app, BrowserWindow, Menu, shell } = require('electron')
+const windowStateManager = require('electron-window-state')
 
 if (process.env.NODE_ENV === 'production') {
 	const sourceMapSupport = require('source-map-support')
@@ -33,11 +34,20 @@ const installExtensions = () => {
 
 app.on('ready', () =>
 	installExtensions().then(() => {
+		let mainWindowState = windowStateManager({
+			defaultWidth: 1024,
+			defaultHeight: 728,
+		})
+
 		let mainWindow = new BrowserWindow({
 			show: false,
-			width: 1024,
-			height: 728,
+			x: mainWindowState.x,
+			y: mainWindowState.y,
+			width: mainWindowState.width,
+			height: mainWindowState.height,
 		})
+
+		mainWindowState.manage(mainWindow)
 
 		mainWindow.loadURL(`file://${__dirname}/app.html`)
 

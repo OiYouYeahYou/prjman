@@ -152,6 +152,7 @@
 	},
 	"dependencies": {
 		"electron-debug": "^1.1.0",
+		"electron-window-state": "^5.0.2",
 		"font-awesome": "^4.7.0",
 		"history": "^4.6.1",
 		"npm-package-arg": "^6.1.0",
