@@ -1,4 +1,3 @@
-// tslint:disable:no-var-requires
 import { Store } from 'redux'
 
 let configureStore: {

@@ -1,5 +1,3 @@
-// tslint:disable:no-var-requires
-
 import { RegistryResponse } from './npm-registry-response'
 import { resolve, Result } from 'npm-package-arg'
 
