@@ -8,11 +8,15 @@ import { EmittingSet } from './EmittingSet'
 
 export declare interface ProjectStore {
 	once(event: 'ready', listener: () => void): this
+	on(event: 'change', listener: () => void): this
 }
 
 export class ProjectStore extends EventEmitter {
-	isReady: boolean = true
+	get isReady() {
+		return this._isReady
+	}
 
+	private _isReady = true
 	private _projects: { [id: string]: Project } = {}
 
 	constructor(
@@ -20,10 +24,8 @@ export class ProjectStore extends EventEmitter {
 	) {
 		super()
 
-		this._collections.on('add', path => this.lookForProjects(path))
+		this._collections.on('add', path => this.collectionsToProjects(path))
 		this._collections.on('remove', path => this.removeOrphans(path))
-
-		Promise.all(this._collections.map(path => this.lookForProjects(path)))
 	}
 
 	getProject(id: string) {
@@ -36,17 +38,27 @@ export class ProjectStore extends EventEmitter {
 		)
 	}
 
-	private async lookForProjects(parentCollection: string) {
-		this.isReady = false
+	private async collectionsToProjects(path?: string) {
+		this.setNotReady()
 
+		if (path) {
+			await this.lookForProjects(path)
+		} else {
+			await Promise.all(
+				this._collections.map(path => this.lookForProjects(path))
+			)
+		}
+
+		this.setReady()
+	}
+
+	private async lookForProjects(parentCollection: string) {
 		const files = await readdir(parentCollection)
 		const proms = files.map(file =>
 			this.lookForProject(parentCollection, file)
 		)
 
-		return Promise.all(proms)
-			.catch(console.error.bind(console))
-			.then(() => this.setReady())
+		await Promise.all(proms).catch(console.error.bind(console))
 	}
 
 	private async lookForProject(parentCollection: string, file: string) {
@@ -76,8 +88,13 @@ export class ProjectStore extends EventEmitter {
 		)
 	}
 
+	private setNotReady() {
+		this._isReady = false
+	}
+
 	private setReady() {
-		this.isReady = true
+		this._isReady = true
+		this.emit('change')
 		this.emit('ready')
 	}
 }
