@@ -57,6 +57,10 @@ export class EmittingSet<T> extends EventEmitter {
 		return this
 	}
 
+	toArray() {
+		return Array.from(this._data)
+	}
+
 	private _emitChange(type: 'add' | 'remove', value?: T) {
 		this.emit(type, value)
 		this.emit('change')
