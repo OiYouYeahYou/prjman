@@ -1,7 +1,5 @@
 import { Settings } from './structures/Settings'
-import { join } from 'path'
-import { homedir } from 'os'
+import { prjmanMainConfigPath } from './utils/constants'
 
-export const settings = new Settings({
-	paths: [join(homedir(), 'code')],
-})
+export let settings = new Settings(prjmanMainConfigPath)
+settings.load()
