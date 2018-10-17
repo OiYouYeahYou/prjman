@@ -52,7 +52,7 @@ export class Project {
 		path: string
 		pkg: PackageJSON | void
 		parentCollection: string
-	}) {
+	}): Project {
 		return Object.assign(new this(), options)
 	}
 }

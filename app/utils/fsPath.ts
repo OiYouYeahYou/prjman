@@ -17,11 +17,11 @@ export function convertToAbsolute(path: string = '') {
 }
 
 export function exists(path: string) {
-	return new Promise(resolve => _exists(path, resolve))
+	return new Promise<boolean>(resolve => _exists(path, resolve))
 }
 
 export function isDirectory(path: string) {
-	return new Promise(resolve =>
+	return new Promise<boolean>(resolve =>
 		lstat(path, (err, stats) => {
 			resolve(err ? false : stats.isDirectory())
 		})
@@ -34,8 +34,8 @@ export function readdir(path: string) {
 	)
 }
 
-export function readFile(path: string): Promise<Buffer> {
-	return new Promise((resolve, reject) =>
+export function readFile(path: string) {
+	return new Promise<Buffer>((resolve, reject) =>
 		_readFile(path, (err, data) => {
 			if (err) {
 				reject(err)
@@ -47,7 +47,7 @@ export function readFile(path: string): Promise<Buffer> {
 }
 
 export function writeFile(path: string, data: any) {
-	return new Promise((resolve, reject) =>
+	return new Promise<void>((resolve, reject) =>
 		_writeFile(path, data, err => {
 			if (err) {
 				reject(err)
