@@ -8,6 +8,12 @@ import {
 	writeFile as _writeFile,
 } from 'fs'
 
+const _getSize: ((
+	path: string,
+	regex: RegExp | undefined,
+	cb: (err: any, size: number) => void
+) => void) = require('get-folder-size')
+
 export function normalise(path: string = '') {
 	return path ? normalize(convertToAbsolute(path)) : ''
 }
@@ -56,4 +62,16 @@ export function writeFile(path: string, data: any) {
 			}
 		})
 	)
+}
+
+export function getSize(path: string, regex?: RegExp) {
+	return new Promise<number>((resolve, reject) => {
+		_getSize(path, regex, (err, size) => {
+			if (err) {
+				reject(err)
+			}
+
+			resolve(size)
+		})
+	})
 }

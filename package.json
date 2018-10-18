@@ -155,6 +155,7 @@
 		"electron-debug": "^1.1.0",
 		"electron-window-state": "^5.0.2",
 		"font-awesome": "^4.7.0",
+		"get-folder-size": "^2.0.0",
 		"history": "^4.6.1",
 		"npm-package-arg": "^6.1.0",
 		"npm-registry-fetch": "^3.8.0",

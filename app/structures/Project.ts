@@ -1,3 +1,5 @@
+import { getSize } from '../utils/fsPath'
+
 export interface PackageJSON {
 	name?: string
 	version?: string
@@ -45,6 +47,10 @@ export class Project {
 
 	getDependencies(key: dependencyKeys) {
 		return this.pkg && this.pkg[key]
+	}
+
+	getSize() {
+		return getSize(this.path)
 	}
 
 	static create(options: {
