@@ -7,6 +7,8 @@ import { projectStore } from '../projects'
 import { DependenciesSection } from '../components/dependencies/Section'
 import { PageSection } from '../components/PageSection'
 import { Project } from '../structures/Project'
+import { PromiseValue } from '../components/PromiseValue'
+import { formatBytes } from '../utils/reabability'
 
 export interface ProjectPageProps
 	extends RouteComponentProps<{ projectid: string }> {}
@@ -67,6 +69,13 @@ export class ProjectPage extends React.Component<
 
 				<OpenInEditor path={path}>Open in Editor</OpenInEditor>
 				<Link to={`/readme/${this.id}`}>Readme</Link>
+
+				<div>
+					<strong>Size: </strong>
+					<PromiseValue
+						promise={project.getSize().then(formatBytes)}
+					/>
+				</div>
 
 				<PageSection title="Description">{description}</PageSection>
 				{this.renderScripts(scripts)}
