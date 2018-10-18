@@ -6,8 +6,6 @@ import { AbstractDependency } from './item-Absctract'
 type ResultTypes = 'remote' | 'git'
 
 export class GitDependency extends AbstractDependency<ResultTypes> {
-	componentWillMount() {}
-
 	render() {
 		const text = (
 			<>

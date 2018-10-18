@@ -13,10 +13,6 @@ export class HeaderMenuItem extends React.Component<
 	HeaderMenuItemProps,
 	HeaderMenuItemState
 > {
-	constructor(props: HeaderMenuItemProps) {
-		super(props)
-	}
-
 	render() {
 		return (
 			<Link

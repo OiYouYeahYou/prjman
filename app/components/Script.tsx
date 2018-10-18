@@ -11,12 +11,8 @@ interface IScriptState {
 }
 
 export class Script extends React.Component<IScriptProps, IScriptState> {
-	constructor(props: IScriptProps) {
-		super(props)
-
-		this.state = {
-			isVisible: false,
-		}
+	readonly state: IScriptState = {
+		isVisible: false,
 	}
 
 	toggleVisible() {

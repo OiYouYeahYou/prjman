@@ -63,10 +63,7 @@ enum States {
 }
 
 export class ReadmePage extends React.Component<ReadmePageProps, states> {
-	constructor(props: ReadmePageProps) {
-		super(props)
-		this.state = { state: States.BLANK }
-	}
+	readonly state: states = { state: States.BLANK }
 
 	componentDidMount() {
 		if (!projectStore.isReady) {

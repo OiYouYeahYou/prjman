@@ -31,13 +31,9 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 	nameInput: HTMLInputElement | null
 	timer: any
 
-	constructor(props: PathListProps) {
-		super(props)
-
-		this.state = {
-			disabled: false,
-			newPath: '',
-		}
+	readonly state: PathListState = {
+		disabled: false,
+		newPath: '',
 	}
 
 	componentDidUpdate() {

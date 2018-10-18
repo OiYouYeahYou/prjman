@@ -17,12 +17,8 @@ export class DependencyItem extends React.Component<
 	DepsItemProps,
 	DepsItemState
 > {
-	constructor(props: DepsItemProps) {
-		super(props)
-
-		this.state = {
-			result: this.props.result,
-		}
+	readonly state: DepsItemState = {
+		result: this.props.result,
 	}
 
 	render() {

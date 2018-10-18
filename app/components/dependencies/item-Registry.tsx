@@ -6,8 +6,6 @@ import { AbstractDependency } from './item-Absctract'
 type ResultTypes = 'version' | 'range' | 'tag'
 
 export class RegistryDependency extends AbstractDependency<ResultTypes> {
-	componentWillMount() {}
-
 	render() {
 		const text = (
 			<>

@@ -16,13 +16,9 @@ export class PromiseValue<T> extends React.Component<
 > {
 	isMountedXXXX: boolean
 
-	constructor(props: PromiseValueProps) {
-		super(props)
-
-		this.state = {
-			completed: false,
-			errored: false,
-		}
+	readonly state: PromiseValueState = {
+		completed: false,
+		errored: false,
 	}
 
 	componentWillMount() {

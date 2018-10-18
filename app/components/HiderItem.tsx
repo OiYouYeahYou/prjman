@@ -11,12 +11,8 @@ interface HiderItemState {
 }
 
 export class HiderItem extends React.Component<HiderItemProps, HiderItemState> {
-	constructor(props: HiderItemProps) {
-		super(props)
-
-		this.state = {
-			visible: false,
-		}
+	readonly state: HiderItemState = {
+		visible: false,
 	}
 
 	mouseIn() {

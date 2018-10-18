@@ -39,14 +39,10 @@ export default class ProjectDependencyInstaller extends React.Component<
 	ProjectDependencyInstallerProps,
 	ProjectDependencyInstallerState
 > {
-	constructor(props: ProjectDependencyInstallerProps) {
-		super(props)
-
-		this.state = {
-			resolution: 'nothing to see',
-			type: 'bitbucket',
-			value: '',
-		}
+	readonly state: ProjectDependencyInstallerState = {
+		resolution: 'nothing to see',
+		type: 'bitbucket',
+		value: '',
 	}
 
 	handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
