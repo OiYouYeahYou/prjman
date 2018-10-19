@@ -1,7 +1,6 @@
 import { join } from 'path'
-import { Project, PackageJSON } from './Project'
+import { Project } from './Project'
 import { settings } from '../settings'
-import { readJSON } from '../utils/jsonFile'
 import { isDirectory, readdir } from '../utils/fsPath'
 import { EventEmitter } from 'events'
 import { EmittingSet } from './EmittingSet'
@@ -61,21 +60,22 @@ export class ProjectStore extends EventEmitter {
 		await Promise.all(proms).catch(console.error.bind(console))
 	}
 
-	private async lookForProject(parentCollection: string, file: string) {
-		const path = join(parentCollection, file)
+	private async lookForProject(parent: string, file: string) {
+		const path = join(parent, file)
 
 		if (!(await isDirectory(path))) {
 			return
 		}
 
-		const pkg = await readJSON<PackageJSON>(join(path, 'package.json'))
-
-		this._projects[file] = Project.create({
-			id: file,
-			path,
-			pkg,
-			parentCollection,
+		Project.create(file, path, parent).then(project => {
+			this.addProject(file, project)
 		})
+	}
+
+	private addProject(id: string, project: Project) {
+		this._projects[id] = project
+
+		this.emit('change')
 	}
 
 	private removeOrphans(collectionPath: string) {

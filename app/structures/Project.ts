@@ -1,4 +1,6 @@
 import { getSize } from '../utils/fsPath'
+import { readJSON } from '../utils/jsonFile'
+import { join } from 'path'
 
 export interface PackageJSON {
 	name?: string
@@ -22,12 +24,15 @@ export type dependencyKeys =
 	| 'optionalDependencies'
 
 export class Project {
-	id: string
-	path: string
 	pkg?: PackageJSON
-	parentCollection: string
 
 	private _description: string
+
+	constructor(
+		public id: string,
+		public path: string,
+		public parentCollection: string
+	) {}
 
 	get name() {
 		return (this.pkg && this.pkg.name) || this.id
@@ -53,12 +58,17 @@ export class Project {
 		return getSize(this.path)
 	}
 
-	static create(options: {
-		id: string
-		path: string
-		pkg: PackageJSON | void
-		parentCollection: string
-	}): Project {
-		return Object.assign(new this(), options)
+	static async create(
+		id: string,
+		path: string,
+		parent: string
+	): Promise<Project> {
+		const [pkg, size] = await Promise.all([
+			await readJSON<PackageJSON>(join(path, 'package.json')),
+			await getSize(path),
+		])
+
+		const application = { pkg, size }
+		return Object.assign(new this(id, path, parent), application)
 	}
 }
