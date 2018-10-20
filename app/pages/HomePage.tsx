@@ -6,13 +6,15 @@ import RemoteGetter from '../components/RemoteGetter'
 export class HomePage extends React.Component<{}, {}> {
 	readonly updateFn = () => this.forceUpdate()
 
+	componentWillMount() {
+		projectStore.on('change', this.updateFn)
+	}
+
 	componentWillUnmount() {
 		projectStore.removeListener('change', this.updateFn)
 	}
 
 	render() {
-		projectStore.on('change', this.updateFn)
-
 		const entries = projectStore.entries()
 		let list
 
