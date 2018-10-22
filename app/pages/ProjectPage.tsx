@@ -3,7 +3,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 
 import { OpenInEditor } from '../components/OpenInEditor'
 import { Script } from '../components/Script'
-import { projectStore } from '../projects'
+import { projectStore } from '../stores'
 import { DependenciesSection } from '../components/dependencies/Section'
 import { PageSection } from '../components/PageSection'
 import { Project } from '../structures/Project'

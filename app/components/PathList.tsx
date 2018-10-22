@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { HiderItem } from './HiderItem'
-import { settings } from '../settings'
+import { settings } from '../stores'
 import { ReadablePath } from './ReadablePath'
 import {
 	normalise,

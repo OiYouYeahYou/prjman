@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { Project } from './Project'
-import { settings } from '../settings'
+import { settings } from '../stores'
 import { isDirectory, readdir } from '../utils/fsPath'
 import { EventEmitter } from 'events'
 import { EmittingSet } from './EmittingSet'

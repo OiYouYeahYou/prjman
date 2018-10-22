@@ -3,7 +3,7 @@ import { exists, readFile } from '../utils/fsPath'
 import ReactMarkdown = require('react-markdown')
 import { OpenInEditor } from '../components/OpenInEditor'
 import { join } from 'path'
-import { projectStore } from '../projects'
+import { projectStore } from '../stores'
 import { RouteComponentProps, Link } from 'react-router-dom'
 
 export interface ReadmePageProps

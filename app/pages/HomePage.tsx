@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { projectStore } from '../projects'
+import { projectStore } from '../stores'
 import RemoteGetter from '../components/RemoteGetter'
 
 export class HomePage extends React.Component<{}, {}> {
