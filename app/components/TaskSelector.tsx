@@ -12,8 +12,17 @@ export class TaskSelector extends React.Component<
 	TaskSelectorProps,
 	TaskSelectorState
 > {
-	readonly state: TaskSelectorState = { task: tasks.entries()[0][0] }
 	readonly updateFn = () => this.forceUpdate()
+
+	// tslint:disable-next-line:member-ordering
+	constructor(props: TaskSelectorProps) {
+		super(props)
+
+		const entries = tasks.entries()
+		const task = entries.length ? entries[0][0] : ''
+
+		this.state = { task }
+	}
 
 	componentWillMount() {
 		tasks.on('update', this.updateFn)
