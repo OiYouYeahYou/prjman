@@ -67,9 +67,9 @@ export class ProjectStore extends EventEmitter {
 			return
 		}
 
-		Project.create(file, path, parent).then(project => {
-			this.addProject(file, project)
-		})
+		const project = Project.create(file, path, parent)
+
+		this.addProject(file, project)
 	}
 
 	private addProject(id: string, project: Project) {

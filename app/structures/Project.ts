@@ -25,6 +25,7 @@ export type dependencyKeys =
 
 export class Project {
 	pkg?: PackageJSON
+	size: number
 
 	private _description: string
 
@@ -58,17 +59,19 @@ export class Project {
 		return getSize(this.path)
 	}
 
-	static async create(
-		id: string,
-		path: string,
-		parent: string
-	): Promise<Project> {
-		const [pkg, size] = await Promise.all([
-			await readJSON<PackageJSON>(join(path, 'package.json')),
-			await getSize(path),
-		])
+	private apply({ pkg, size }: { pkg: PackageJSON | void; size: number }) {
+		this.pkg = pkg as PackageJSON | undefined
+		this.size = size
+	}
 
-		const application = { pkg, size }
-		return Object.assign(new this(id, path, parent), application)
+	static create(id: string, path: string, parent: string) {
+		const project = new this(id, path, parent)
+
+		Promise.all([
+			readJSON<PackageJSON>(join(path, 'package.json')),
+			getSize(path),
+		]).then(([pkg, size]) => project.apply({ pkg, size }))
+
+		return project
 	}
 }
