@@ -45,6 +45,16 @@ export default class ProjectDependencyInstaller extends React.Component<
 		value: '',
 	}
 
+	updateFn = () => this.forceUpdate()
+
+	componentWillMount() {
+		this.props.project.on('update', this.updateFn)
+	}
+
+	componentWillUnmount() {
+		this.props.project.removeListener('update', this.updateFn)
+	}
+
 	handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
 		this.setState({
 			value: event.target.value,

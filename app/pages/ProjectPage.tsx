@@ -13,12 +13,32 @@ import { formatBytes } from '../utils/reabability'
 export interface ProjectPageProps
 	extends RouteComponentProps<{ projectid: string }> {}
 
-interface ProjectPageState {}
+interface ProjectPageState {
+	project?: Project
+}
 
 export class ProjectPage extends React.Component<
 	ProjectPageProps,
 	ProjectPageState
 > {
+	readonly state: ProjectPageState = {}
+	updateFn = () => this.forceUpdate()
+
+	componentWillMount() {
+		const project = projectStore.getProject(this.id)
+
+		if (project) {
+			project.on('update', this.updateFn)
+		}
+		this.setState({ project })
+	}
+
+	componentWillUnmount() {
+		if (this.state.project) {
+			this.state.project.removeListener('update', this.updateFn)
+		}
+	}
+
 	get id() {
 		return this.props.match.params.projectid
 	}
@@ -30,7 +50,7 @@ export class ProjectPage extends React.Component<
 			return this.renderWaitingToLoadProjects()
 		}
 
-		const project = projectStore.getProject(this.id)
+		const { project } = this.state
 
 		if (project) {
 			return this.renderProject(project)

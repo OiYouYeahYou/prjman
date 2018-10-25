@@ -22,6 +22,16 @@ export class DependenciesSection extends React.Component<
 	DepsSectionProps,
 	DepsSectionState
 > {
+	updateFn = () => this.forceUpdate()
+
+	componentWillMount() {
+		this.props.project.on('update', this.updateFn)
+	}
+
+	componentWillUnmount() {
+		this.props.project.removeListener('update', this.updateFn)
+	}
+
 	render() {
 		if (!this.props.project.pkg) {
 			return null
