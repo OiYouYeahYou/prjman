@@ -25,6 +25,8 @@ export class ProjectStore extends EventEmitter {
 
 		this._collections.on('add', path => this.collectionsToProjects(path))
 		this._collections.on('remove', path => this.removeOrphans(path))
+
+		this._collections.forEach(path => this.collectionsToProjects(path))
 	}
 
 	getProject(id: string) {
