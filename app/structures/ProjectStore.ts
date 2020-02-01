@@ -1,6 +1,5 @@
 import { join } from 'path'
 import { Project } from './Project'
-import { settings } from '../stores'
 import { isDirectory, readdir } from '../utils/fsPath'
 import { EventEmitter } from 'events'
 import { EmittingSet } from './EmittingSet'
@@ -18,9 +17,7 @@ export class ProjectStore extends EventEmitter {
 	private _isReady = true
 	private _projects: { [id: string]: Project } = {}
 
-	constructor(
-		private _collections: EmittingSet<string> = settings.collections
-	) {
+	constructor(private _collections: EmittingSet<string>) {
 		super()
 
 		this._collections.on('add', path => this.collectionsToProjects(path))
@@ -37,6 +34,10 @@ export class ProjectStore extends EventEmitter {
 		return Object.entries(this._projects).sort(([a], [b]) =>
 			a.localeCompare(b)
 		)
+	}
+
+	values() {
+		return Object.values(this._projects)
 	}
 
 	private async collectionsToProjects(path?: string) {
@@ -71,11 +72,12 @@ export class ProjectStore extends EventEmitter {
 
 		const project = Project.create(file, path, parent)
 
-		this.addProject(file, project)
+		this.addProject(project)
 	}
 
-	private addProject(id: string, project: Project) {
-		this._projects[id] = project
+	private addProject(project: Project) {
+		this._projects[project.id] = project
+		project.on('update', () => this.emit('change'))
 
 		this.emit('change')
 	}

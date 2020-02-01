@@ -1,34 +1,35 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset="utf-8">
-  <title>prjman - The Personal Forge</title>
-  <script>
-    (function () {
-      if (!process.env.HOT) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = './dist/style.css';
-        // HACK: Writing the script path should be done with webpack
-        document.getElementsByTagName('head')[0].appendChild(link);
-      }
-    }());
-  </script>
-</head>
-
-<body>
-  <div id="root"></div>
-  <script>
-    {
-      const script = document.createElement('script');
-      script.src = (process.env.HOT)
-        ? `http://localhost:${process.env.PORT || 3000}/dist/bundle.js`
-        : './dist/bundle.js';
-      // HACK: Writing the script path should be done with webpack
-      document.body.appendChild(script);
-    }
-  </script>
-</body>
-
-</html>
+Html Webpack Plugin:
+<pre>
+  ReferenceError: process is not defined
+  
+  - app.html:74 
+    /home/jason/code/prjman/app/app.html:74:10
+  
+  - app.html:77 module.exports
+    /home/jason/code/prjman/app/app.html:77:3
+  
+  - index.js:264 
+    [prjman]/[html-webpack-plugin]/index.js:264:16
+  
+  - util.js:16 tryCatcher
+    [prjman]/[bluebird]/js/release/util.js:16:23
+  
+  - promise.js:512 Promise._settlePromiseFromHandler
+    [prjman]/[bluebird]/js/release/promise.js:512:31
+  
+  - promise.js:569 Promise._settlePromise
+    [prjman]/[bluebird]/js/release/promise.js:569:18
+  
+  - promise.js:606 Promise._settlePromiseCtx
+    [prjman]/[bluebird]/js/release/promise.js:606:10
+  
+  - async.js:142 _drainQueueStep
+    [prjman]/[bluebird]/js/release/async.js:142:12
+  
+  - async.js:131 _drainQueue
+    [prjman]/[bluebird]/js/release/async.js:131:9
+  
+  - async.js:147 Async._drainQueues
+    [prjman]/[bluebird]/js/release/async.js:147:5
+  
+</pre>

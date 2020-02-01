@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import { createHashHistory } from 'history'
+import { createBrowserHistory } from 'history'
 import { routerMiddleware, push } from 'react-router-redux'
 import { createLogger } from 'redux-logger'
 import rootReducer from '../reducers'
@@ -22,7 +22,7 @@ const logger = (createLogger as any)({
 	level: 'info',
 })
 
-const history = createHashHistory()
+const history = createBrowserHistory()
 const router = routerMiddleware(history)
 
 // If Redux DevTools Extension is installed use it, otherwise use Redux compose

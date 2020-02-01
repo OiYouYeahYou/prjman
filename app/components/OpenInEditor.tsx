@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { openInEditor } from '../api/editors'
 
-export interface OpenInEditorProps {
+interface OpenInEditorProps {
 	path: string
 	children?: string
 }
@@ -15,7 +15,7 @@ export class OpenInEditor extends React.Component<
 	render() {
 		return (
 			<button onClick={() => openInEditor(this.props.path)}>
-				{this.props.children ? this.props.children : 'Edit'}
+				{this.props.children || 'Edit'}
 			</button>
 		)
 	}

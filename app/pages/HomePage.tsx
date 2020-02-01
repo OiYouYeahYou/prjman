@@ -1,42 +1,20 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
-import { projectStore } from '../stores'
 import RemoteGetter from '../components/RemoteGetter'
+import { ProjectList } from '../components/project-list/ProjectList'
+import { PageContainerProps } from '../components/page-container'
 
-export class HomePage extends React.Component<{}, {}> {
-	readonly updateFn = () => this.forceUpdate()
+interface HomePageProps extends PageContainerProps {}
 
-	componentWillMount() {
-		projectStore.on('change', this.updateFn)
-	}
-
-	componentWillUnmount() {
-		projectStore.removeListener('change', this.updateFn)
-	}
-
+export class HomePage extends React.Component<HomePageProps, {}> {
 	render() {
-		const entries = projectStore.entries()
-		let list
-
-		if (!projectStore.isReady) {
-			list = <b>loading project data</b>
-		} else if (entries.length) {
-			const items = entries.map(([name]) => (
-				<li key={name}>
-					<Link to={`/project/${name}`}>{name}</Link>
-				</li>
-			))
-
-			list = <ul>{items}</ul>
-		} else {
-			list = <b>cannot find any projects</b>
-		}
-
 		return (
 			<div>
 				<h1>Welcome to prjman</h1>
+				{process.env.visual || 'bleh'}
+				{process.env.editor || 'bleh'}
 				<RemoteGetter />
-				{list}
+				<hr />
+				<ProjectList projectStore={this.props.projectStore} />
 			</div>
 		)
 	}

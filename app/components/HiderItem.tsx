@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export interface HiderItemProps {
+interface HiderItemProps {
 	visible: any
 	hidden: any
 	children?: any
@@ -15,20 +15,20 @@ export class HiderItem extends React.Component<HiderItemProps, HiderItemState> {
 		visible: false,
 	}
 
-	mouseIn() {
-		this.setState({ visible: true })
-	}
-
-	mouseOut() {
-		this.setState({ visible: false })
+	handleEvent = ({ type }: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+		switch (type) {
+			case 'mouseenter':
+				this.setState({ visible: true })
+			case 'mouseleave':
+				this.setState({ visible: false })
+			default:
+				return console.warn(`No case for event type "${type}"`)
+		}
 	}
 
 	render() {
 		return (
-			<li
-				onMouseEnter={() => this.mouseIn()}
-				onMouseLeave={() => this.mouseOut()}
-			>
+			<li onMouseEnter={this.handleEvent} onMouseLeave={this.handleEvent}>
 				{this.props.visible}{' '}
 				{this.state.visible ? this.props.hidden : null}
 				{this.props.children}

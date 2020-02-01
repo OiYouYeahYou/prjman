@@ -1,17 +1,16 @@
 import * as React from 'react'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { OpenInEditor } from '../components/OpenInEditor'
 import { Script } from '../components/Script'
-import { projectStore } from '../stores'
 import { DependenciesSection } from '../components/dependencies/Section'
 import { PageSection } from '../components/PageSection'
 import { Project } from '../structures/Project'
-import { PromiseValue } from '../components/PromiseValue'
 import { formatBytes } from '../utils/reabability'
+import { PageContainerProps } from '../components/page-container'
 
 export interface ProjectPageProps
-	extends RouteComponentProps<{ projectid: string }> {}
+	extends PageContainerProps<{ projectid: string }> {}
 
 interface ProjectPageState {
 	project?: Project
@@ -25,7 +24,7 @@ export class ProjectPage extends React.Component<
 	updateFn = () => this.forceUpdate()
 
 	componentWillMount() {
-		const project = projectStore.getProject(this.id)
+		const project = this.props.projectStore.getProject(this.id)
 
 		if (project) {
 			project.on('update', this.updateFn)
@@ -44,8 +43,8 @@ export class ProjectPage extends React.Component<
 	}
 
 	render() {
-		if (!projectStore.isReady) {
-			projectStore.once('ready', () => this.forceUpdate())
+		if (!this.props.projectStore.isReady) {
+			this.props.projectStore.once('ready', () => this.forceUpdate())
 
 			return this.renderWaitingToLoadProjects()
 		}
@@ -79,6 +78,7 @@ export class ProjectPage extends React.Component<
 			version,
 			description = <i>no description</i>,
 			scripts,
+			size,
 		} = project
 
 		return (
@@ -90,11 +90,16 @@ export class ProjectPage extends React.Component<
 				<OpenInEditor path={path}>Open in Editor</OpenInEditor>
 				<Link to={`/readme/${this.id}`}>Readme</Link>
 
+				<pre>
+					{(
+						(project.versioning &&
+							project.versioning.dirtyWashing) ||
+						[]
+					).join('\n')}
+				</pre>
+
 				<div>
-					<strong>Size: </strong>
-					<PromiseValue
-						promise={project.getSize().then(formatBytes)}
-					/>
+					<strong>Size: </strong> {formatBytes(size)}
 				</div>
 
 				<PageSection title="Description">{description}</PageSection>
@@ -105,9 +110,11 @@ export class ProjectPage extends React.Component<
 	}
 
 	renderScripts(scripts: { [name: string]: string }): JSX.Element | void {
-		const scriptElements = Object.entries(scripts).map(([name, script]) => (
-			<Script key={name} name={name} script={script} />
-		))
+		const scriptElements = Object.entries(scripts)
+			.sort(([a], [b]) => a.localeCompare(b))
+			.map(([name, script]) => (
+				<Script key={name} name={name} script={script} />
+			))
 
 		if (scriptElements.length) {
 			return (

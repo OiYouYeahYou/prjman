@@ -1,7 +1,8 @@
-import { getSize } from '../utils/fsPath'
+import { getSize, readdir, rimraf } from '../utils/fsPath'
 import { readJSON } from '../utils/jsonFile'
 import { join } from 'path'
 import { EventEmitter } from 'events'
+import VersioningTools from '../versioning'
 
 export interface PackageJSON {
 	name?: string
@@ -28,10 +29,19 @@ export class Project extends EventEmitter {
 	pkg?: PackageJSON
 	size: number
 
+	hasModules: boolean
+	hasNpmLock: boolean
+	hasYarnLock: boolean
+	isNode: boolean
+	isUnderRemoval: boolean = false
+	isRemoved: boolean = false
+	rootFiles: string[]
+	versioning: VersioningTools | null
+
 	private _description: string
 
 	private constructor(
-		public id: string,
+		public dirName: string,
 		public path: string,
 		public parentCollection: string
 	) {
@@ -39,7 +49,7 @@ export class Project extends EventEmitter {
 	}
 
 	get name() {
-		return (this.pkg && this.pkg.name) || this.id
+		return (this.pkg && this.pkg.name) || this.dirName
 	}
 
 	get version() {
@@ -54,6 +64,10 @@ export class Project extends EventEmitter {
 		return (this.pkg && this.pkg.scripts) || {}
 	}
 
+	get id() {
+		return this.path.replace(/\//g, '_')
+	}
+
 	getDependencies(key: dependencyKeys) {
 		return this.pkg && this.pkg[key]
 	}
@@ -62,21 +76,90 @@ export class Project extends EventEmitter {
 		return getSize(this.path)
 	}
 
-	private apply({ pkg, size }: { pkg: PackageJSON | void; size: number }) {
-		this.pkg = pkg as PackageJSON | undefined
-		this.size = size
+	update() {
+		return this.apply().catch(err => console.error(err))
+	}
+
+	deleteFromDisk() {
+		this.isUnderRemoval = true
+
+		return rimraf(this.path)
+			.then(code => {
+				this.isUnderRemoval = false
+				this.isRemoved = true
+
+				this.emit('change')
+				this.emit('removed')
+			})
+			.catch(code => {
+				this.isUnderRemoval = false
+				console.log(code)
+			})
+	}
+
+	private async apply() {
+		const [rootFiles] = await Promise.all([readdir(this.path)])
+		this.rootFiles = rootFiles
+
+		await Promise.all<any>([
+			...rootFiles.map(file => {
+				const handler = files.get(file)
+				if (handler) {
+					return handler(this)
+				}
+			}),
+			// Promise.resolve(1.1)
+			getSize(this.path)
+				.catch(sizeErrorHandle)
+				.then(size => (this.size = size)),
+		])
+
+		const ver = (this.versioning = await VersioningTools.run(this))
+
+		if (ver) {
+			await ver.getCommitCount()
+			await ver.getDirtyList()
+			await ver.getLastCommitDate()
+		}
 
 		this.emit('update')
 	}
 
-	static create(id: string, path: string, parent: string) {
-		const project = new this(id, path, parent)
+	static create(dirName: string, path: string, parent: string) {
+		const project = new this(dirName, path, parent)
 
-		Promise.all([
-			readJSON<PackageJSON>(join(path, 'package.json')),
-			getSize(path),
-		]).then(([pkg, size]) => project.apply({ pkg, size }))
+		project.apply()
 
 		return project
 	}
 }
+
+const sizeErrorHandle = (err: any) => {
+	console.error(err)
+	return -1
+}
+
+type fileNameHandler = (project: Project) => Promise<void> | void
+
+const files = new Map(
+	Object.entries<fileNameHandler>({
+		'package-lock.json'(project) {
+			project.hasNpmLock = true
+		},
+
+		'yarn.lock'(project) {
+			project.hasYarnLock = true
+		},
+
+		node_modules(project) {
+			project.hasModules = true
+		},
+
+		async 'package.json'(project) {
+			project.isNode = true
+			project.pkg = (await readJSON(
+				join(project.path, 'package.json')
+			)) as PackageJSON | undefined
+		},
+	})
+)

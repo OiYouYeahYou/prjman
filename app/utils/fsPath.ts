@@ -1,5 +1,5 @@
 import { homedir } from 'os'
-import { normalize } from 'path'
+import { normalize, isAbsolute, resolve } from 'path'
 import {
 	lstat,
 	exists as _exists,
@@ -7,12 +7,15 @@ import {
 	readFile as _readFile,
 	writeFile as _writeFile,
 } from 'fs'
+import reject = require('lodash/reject')
+import { spawn } from 'child_process'
+import { inherits } from 'util'
 
-const _getSize: ((
+const _getSize: (
 	path: string,
 	regex: RegExp | undefined,
 	cb: (err: any, size: number) => void
-) => void) = require('get-folder-size')
+) => void = require('get-folder-size')
 
 export function normalise(path: string = '') {
 	return path ? normalize(convertToAbsolute(path)) : ''
@@ -73,5 +76,30 @@ export function getSize(path: string, regex?: RegExp) {
 
 			resolve(size)
 		})
+	})
+}
+
+export function rimraf(...paths: string[]) {
+	// Using relative paths may lead to unexpected affects
+	// So we don't want allow anything but absolute paths
+	const invalidPaths = paths.filter(p => !isAbsolute(p))
+	if (invalidPaths.length) {
+		return Promise.reject(
+			new Error(`Only use absolute paths: ${invalidPaths.join(',')}`)
+		)
+	}
+
+	return new Promise((resolve, reject) => {
+		const rm = spawn('rm', ['-rfv', ...paths])
+
+		rm.stdout.on('data', data => {
+			console.log(`stdout: ${data}`)
+		})
+
+		rm.stderr.on('data', data => {
+			console.log(`stderr: ${data}`)
+		})
+
+		rm.on('close', code => (code === 0 ? resolve : reject)(code))
 	})
 }

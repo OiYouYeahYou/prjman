@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-export interface HeaderMenuItemProps {
+interface HeaderMenuItemProps {
 	text: string
 	to: string
 	children?: undefined

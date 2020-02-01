@@ -5,7 +5,7 @@ import { RegistryDependency } from './item-Registry'
 import { FilePathDependency } from './item-FilePath'
 import { AliasDependency } from './item-Alias'
 
-export interface DepsItemProps {
+interface DepsItemProps {
 	result: Result
 	name: string
 	children?: void

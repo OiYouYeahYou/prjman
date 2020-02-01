@@ -1,5 +1,6 @@
 const { app, BrowserWindow, Menu, shell } = require('electron')
 const windowStateManager = require('electron-window-state')
+const path = require('path')
 
 // Disabling security messages because I can not
 // figure out how to fix what should be fixed
@@ -13,7 +14,6 @@ if (process.env.NODE_ENV === 'production') {
 
 if (process.env.NODE_ENV === 'development') {
 	require('electron-debug')()
-	const path = require('path')
 	const p = path.join(__dirname, '..', 'app', 'node_modules')
 	require('module').globalPaths.push(p)
 }
@@ -22,19 +22,17 @@ app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') app.quit()
 })
 
-const installExtensions = () => {
-	if (process.env.NODE_ENV === 'development') {
-		const installer = require('electron-devtools-installer')
-		const { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = installer
-		const forceDownload = !!process.env.UPGRADE_EXTENSIONS
+const installExtensions = async () => {
+	if (process.env.NODE_ENV !== 'development') return
 
-		return Promise.all([
-			installer.default(REACT_DEVELOPER_TOOLS, forceDownload),
-			installer.default(REDUX_DEVTOOLS, forceDownload),
-		])
-	}
+	const installer = require('electron-devtools-installer')
+	const { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = installer
+	const forceDownload = !!process.env.UPGRADE_EXTENSIONS
 
-	return Promise.resolve()
+	return Promise.all([
+		installer.default(REACT_DEVELOPER_TOOLS, forceDownload),
+		installer.default(REDUX_DEVTOOLS, forceDownload),
+	])
 }
 
 app.on('ready', () =>
@@ -50,6 +48,11 @@ app.on('ready', () =>
 			y: mainWindowState.y,
 			width: mainWindowState.width,
 			height: mainWindowState.height,
+			icon: path.join(__dirname, '..', 'resources', 'icons', '64x64.png'),
+
+			webPreferences: {
+				nodeIntegration: true,
+			},
 		})
 
 		mainWindowState.manage(mainWindow)

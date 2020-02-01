@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { HiderItem } from './HiderItem'
-import { settings } from '../stores'
 import { ReadablePath } from './ReadablePath'
 import {
 	normalise,
@@ -8,10 +7,11 @@ import {
 	exists,
 	isDirectory,
 } from '../utils/fsPath'
+import { EmittingSet } from '../structures/EmittingSet'
 
-const { collections } = settings
-
-export interface PathListProps {}
+interface PathListProps {
+	collections: EmittingSet<string>
+}
 
 interface PathListState {
 	newPath: string
@@ -31,10 +31,16 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 	nameInput: HTMLInputElement | null
 	timer: any
 
+	get collections() {
+		return this.props.collections
+	}
+
 	readonly state: PathListState = {
 		disabled: false,
 		newPath: '',
 	}
+
+	pathsListener = () => this.forceUpdate()
 
 	componentDidUpdate() {
 		if (this.nameInput) {
@@ -43,17 +49,11 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 	}
 
 	componentWillMount() {
-		const pathsListener = () => this.forceUpdate()
-
-		collections.on('change', pathsListener)
-		this.setState({ pathsListener })
+		this.collections.on('change', this.pathsListener)
 	}
 
 	componentWillUnmount() {
-		if (this.state.pathsListener) {
-			collections.removeListener('change', this.state.pathsListener)
-			this.setState({ pathsListener: undefined })
-		}
+		this.collections.removeListener('change', this.pathsListener)
 	}
 
 	async submitNewPath(event: React.FormEvent<HTMLFormElement>) {
@@ -64,7 +64,7 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 
 		if (!path) {
 			this.setError(sumbitErrors.ERROR_BLANK)
-		} else if (collections.has(path)) {
+		} else if (this.collections.has(path)) {
 			this.setError(sumbitErrors.ERROR_ALREADY_COLLECTION)
 		} else if (!(await exists(path))) {
 			this.setError(sumbitErrors.ERROR_NO_EXISTS)
@@ -72,7 +72,7 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 			this.setError(sumbitErrors.ERROR_NOT_DIRECTORY)
 		} else {
 			this.setState({ newPath: '' })
-			collections.add(path)
+			this.collections.add(path)
 		}
 
 		this.setState({ disabled: false })
@@ -121,12 +121,12 @@ export class PathList extends React.Component<PathListProps, PathListState> {
 	}
 
 	renderPaths() {
-		return collections.map((path, i) => (
+		return this.collections.map((path, i) => (
 			<HiderItem
 				key={path + '-' + i}
 				visible={<ReadablePath path={path} />}
 				hidden={
-					<button onClick={() => collections.remove(path)}>
+					<button onClick={() => this.collections.remove(path)}>
 						remove
 					</button>
 				}

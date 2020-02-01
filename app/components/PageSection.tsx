@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export interface PageSectionProps {
+interface PageSectionProps {
 	title: string
 	subSection?: true
 	children: React.ReactNode

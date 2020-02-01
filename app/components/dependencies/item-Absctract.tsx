@@ -12,7 +12,7 @@ type resultTypes =
 	| 'git'
 	| 'alias'
 
-export interface AbstractDependencyProps<ResultType extends resultTypes> {
+interface AbstractDependencyProps<ResultType extends resultTypes> {
 	result: ResgistryResult<ResultType>
 	name: string
 }

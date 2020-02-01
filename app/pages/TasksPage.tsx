@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { RouteComponentProps } from 'react-router-dom'
 import { Task } from '../structures/TaskManager'
-import { tasks } from '../tasks'
+import { PageContainerProps } from '../components/page-container'
 
-export interface TasksPageProps extends RouteComponentProps<{ task: string }> {}
+export interface TasksPageProps extends PageContainerProps<{ task: string }> {}
 
 interface TasksPageState {
 	task: Task
@@ -18,7 +17,7 @@ export class TasksPage extends React.Component<TasksPageProps, TasksPageState> {
 		super(props)
 
 		this.state = {
-			task: tasks.tasks[props.match.params.task],
+			task: this.props.tasks.tasks[props.match.params.task],
 			input: '',
 		}
 

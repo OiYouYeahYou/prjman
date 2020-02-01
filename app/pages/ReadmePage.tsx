@@ -3,20 +3,11 @@ import { exists, readFile } from '../utils/fsPath'
 import ReactMarkdown = require('react-markdown')
 import { OpenInEditor } from '../components/OpenInEditor'
 import { join } from 'path'
-import { projectStore } from '../stores'
-import { RouteComponentProps, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { PageContainerProps } from '../components/page-container'
 
 export interface ReadmePageProps
-	extends RouteComponentProps<{ projectid: string }> {}
-
-interface ReadmeState {
-	filename: string
-	readmeString?: string
-	error?: any
-	noReadme?: boolean
-	unmounted?: boolean
-	notReady?: boolean
-}
+	extends PageContainerProps<{ projectid: string }> {}
 
 interface State<T extends States> {
 	state: T
@@ -66,16 +57,16 @@ export class ReadmePage extends React.Component<ReadmePageProps, states> {
 	readonly state: states = { state: States.BLANK }
 
 	componentDidMount() {
-		if (!projectStore.isReady) {
+		if (!this.props.projectStore.isReady) {
 			this.setState({ state: States.PROJECT_STORE_NOT_READY })
-			projectStore.once('ready', () => this.xxx())
+			this.props.projectStore.once('ready', () => this.xxx())
 		} else {
 			this.xxx()
 		}
 	}
 
 	async xxx() {
-		const project = projectStore.getProject(
+		const project = this.props.projectStore.getProject(
 			this.props.match.params.projectid
 		)
 
@@ -100,7 +91,7 @@ export class ReadmePage extends React.Component<ReadmePageProps, states> {
 			return this.setState({ state: States.NO_README_EXISTS })
 		}
 
-		readFile(filename)
+		return readFile(filename)
 			.then(contents =>
 				this.safeSet({
 					state: States.README_FOUND_AND_READ,

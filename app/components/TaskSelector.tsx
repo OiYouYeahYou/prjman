@@ -1,8 +1,11 @@
 import * as React from 'react'
-import { tasks } from '../tasks'
 import { Link } from 'react-router-dom'
+import { Select } from './Select'
+import { Task, TaskManager } from '../structures/TaskManager'
 
-export interface TaskSelectorProps {}
+export interface TaskSelectorProps {
+	tasks: TaskManager
+}
 
 interface TaskSelectorState {
 	task: string
@@ -12,24 +15,23 @@ export class TaskSelector extends React.Component<
 	TaskSelectorProps,
 	TaskSelectorState
 > {
-	readonly updateFn = () => this.forceUpdate()
 
-	// tslint:disable-next-line:member-ordering
 	constructor(props: TaskSelectorProps) {
 		super(props)
 
-		const entries = tasks.entries()
+		const entries = this.props.tasks.entries()
 		const task = entries.length ? entries[0][0] : ''
 
 		this.state = { task }
 	}
+	readonly updateFn = () => this.forceUpdate()
 
 	componentWillMount() {
-		tasks.on('update', this.updateFn)
+		this.props.tasks.on('update', this.updateFn)
 	}
 
 	componentWillUnmount() {
-		tasks.removeListener('update', this.updateFn)
+		this.props.tasks.removeListener('update', this.updateFn)
 	}
 
 	selectChange(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -37,7 +39,7 @@ export class TaskSelector extends React.Component<
 	}
 
 	render() {
-		const entries = tasks.entries()
+		const entries = this.props.tasks.entries()
 
 		if (!entries.length) {
 			return <i>no tasks running</i>
@@ -45,16 +47,11 @@ export class TaskSelector extends React.Component<
 
 		return (
 			<span>
-				<select
+				<Select
 					onChange={event => this.selectChange(event)}
-					value={this.state.task}
-				>
-					{entries.map(([key, task]) => (
-						<option key={key} value={key}>
-							{task.name}
-						</option>
-					))}
-				</select>
+					selected={this.state.task}
+					values={entries.map(castTaskEntryToStringTuple)}
+				/>
 
 				<Link to={'/tasks/' + this.state.task}>
 					<button>Go</button>
@@ -63,3 +60,8 @@ export class TaskSelector extends React.Component<
 		)
 	}
 }
+
+const castTaskEntryToStringTuple = ([key, task]: [string, Task]): [
+	string,
+	string
+] => [key, task.name]

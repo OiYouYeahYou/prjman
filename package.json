@@ -8,15 +8,15 @@
 		"hot-server": "cross-env NODE_ENV=development node --max_old_space_size=2096 server.js",
 		"build-main": "cross-env NODE_ENV=production node ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
 		"build-renderer": "cross-env NODE_ENV=production node ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
-		"build": "npm run build-main && npm run build-renderer",
+		"build": "yarn run build-main && yarn run build-renderer",
 		"start": "cross-env NODE_ENV=production electron ./app/",
 		"start-hot": "cross-env HOT=1 NODE_ENV=development electron ./app/main.development",
-		"postinstall": "npm run build",
-		"dev": "npm run hot-server -- --start-hot",
-		"package": "npm run build && build --publish never",
-		"package-win": "npm run build && build --win --x64",
-		"package-linux": "npm run build && build --linux",
-		"package-all": "npm run build && build -mwl",
+		"postinstall": "yarn run build",
+		"dev": "yarn run hot-server -- --start-hot",
+		"package": "yarn run build && build --publish never",
+		"package-win": "yarn run build && build --win --x64",
+		"package-linux": "yarn run build && build --linux",
+		"package-all": "yarn run build && build -mwl",
 		"lint:prettier": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,yml,md,scss}\""
 	},
 	"build": {
@@ -75,7 +75,8 @@
 	"devDependencies": {
 		"@types/enzyme": "^3.1.1",
 		"@types/history": "^4.5.2",
-		"@types/jest": "^22.0.0",
+		"@types/hosted-git-info": "^2.7.0",
+		"@types/lodash": "^4.14.123",
 		"@types/node": "^8.0.2",
 		"@types/npm-package-arg": "^5.1.0",
 		"@types/react": "^16.0.5",
@@ -94,7 +95,7 @@
 		"css-loader": "^0.28.4",
 		"css-modules-require-hook": "^4.0.6",
 		"devtron": "^1.4.0",
-		"electron": "^3.0.0",
+		"electron": "^5.0.0",
 		"electron-builder": "^19.8.0",
 		"electron-builder-http": "^19.15.0",
 		"electron-devtools-installer": "^2.0.1",
@@ -114,6 +115,7 @@
 		"sinon": "^4.0.0",
 		"spectron": "^3.4.1",
 		"style-loader": "^0.19.0",
+		"svg2img": "^0.6.0",
 		"ts-loader": "^3.1.0",
 		"ts-node": "^4.1.0",
 		"tslint": "^5.4.3",
@@ -125,6 +127,7 @@
 		"webpack-merge": "^4.1.1"
 	},
 	"dependencies": {
+		"@types/request": "^2.48.1",
 		"detect-indent": "^5.0.0",
 		"electron-debug": "^1.1.0",
 		"electron-window-state": "^5.0.2",
@@ -132,6 +135,9 @@
 		"get-folder-size": "^2.0.0",
 		"history": "^4.6.1",
 		"hosted-git-info": "^2.7.1",
+		"lodash": "^4.17.11",
+		"moment": "^2.24.0",
+		"node-cache": "^4.2.0",
 		"npm-package-arg": "^6.1.0",
 		"npm-registry-fetch": "^3.8.0",
 		"react": "^16.0.0",
@@ -143,12 +149,24 @@
 		"react-router-redux": "^5.0.0-alpha.6",
 		"redux": "^3.6.0",
 		"redux-thunk": "^2.1.0",
+		"request": "^2.88.0",
 		"simple-git": "^1.103.0",
 		"source-map-support": "^0.5.0",
 		"validate-npm-package-name": "^3.0.0"
 	},
 	"devEngines": {
-		"node": ">=6.x",
-		"npm": ">=3.x"
+		"node": ">=6.x"
+	},
+	"ava": {
+		"compileEnhancements": false,
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		],
+		"sources": [
+			"app/**/*.{js,jsx,ts,tsx}"
+		]
 	}
 }

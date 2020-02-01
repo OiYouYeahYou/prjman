@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { HiderItem } from '../HiderItem'
 import { AbstractDependency } from './item-Absctract'
+import { NavButton } from '../NavButton'
 
 type ResultTypes = 'version' | 'range' | 'tag'
 
@@ -16,10 +17,16 @@ export class RegistryDependency extends AbstractDependency<ResultTypes> {
 			</>
 		)
 		const buttons = [
-			<button key="get">get</button>,
-			<button key="readme">readme</button>,
+			<NavButton path="" key="get">
+				get
+			</NavButton>,
+			<NavButton path="" key="readme">
+				readme
+			</NavButton>,
 		]
 
-		return <HiderItem key={this.name} visible={text} hidden={buttons} />
+		return (
+			<HiderItem key={this.name + 'hi'} visible={text} hidden={buttons} />
+		)
 	}
 }

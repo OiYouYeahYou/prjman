@@ -6,7 +6,7 @@ import { PageSection } from '../PageSection'
 import { DependencyItem } from './Item'
 import ProjectDependencyInstaller from '../ProjectDependencyInstaller'
 
-export interface DepsSectionProps {
+interface DepsSectionProps {
 	project: Project
 }
 
@@ -106,7 +106,7 @@ export class DependenciesSection extends React.Component<
 			.forEach(([pkg, version]) => {
 				const result = resolve(pkg, version, path)
 				const { type, scope } = result
-				//
+					//
 				;(SCOPABLE_TYPES.includes(type) && scope
 					? scoped[scope] || (scoped[scope] = [])
 					: other
