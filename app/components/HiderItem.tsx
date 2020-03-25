@@ -19,8 +19,10 @@ export class HiderItem extends React.Component<HiderItemProps, HiderItemState> {
 		switch (type) {
 			case 'mouseenter':
 				this.setState({ visible: true })
+				break
 			case 'mouseleave':
 				this.setState({ visible: false })
+				break
 			default:
 				return console.warn(`No case for event type "${type}"`)
 		}
