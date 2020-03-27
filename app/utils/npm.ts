@@ -1,5 +1,6 @@
-import { RegistryResponse } from './npm-registry-response'
 import { resolve, Result } from 'npm-package-arg'
+
+import { RegistryResponse } from './npm-registry-response'
 
 const npmFetch: {
 	json(path: string): Promise<RegistryResponse>

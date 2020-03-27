@@ -1,6 +1,7 @@
+const path = require('path')
+
 const { app, BrowserWindow, Menu, shell } = require('electron')
 const windowStateManager = require('electron-window-state')
-const path = require('path')
 
 // Disabling security messages because I can not
 // figure out how to fix what should be fixed
@@ -22,8 +23,10 @@ app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') app.quit()
 })
 
-const installExtensions = async () => {
-	if (process.env.NODE_ENV !== 'development') return
+const installExtensions = () => {
+	if (process.env.NODE_ENV !== 'development') {
+		return Promise.resolve()
+	}
 
 	const installer = require('electron-devtools-installer')
 	const { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = installer

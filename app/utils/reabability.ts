@@ -36,12 +36,16 @@ export function formatBytes(bytes: number, fractions = 0): string {
 
 export function rightPad(val: string | number, len: number, padder = ' ') {
 	val = String(val)
-	while (val.length < len) { val += padder }
+	while (val.length < len) {
+		val += padder
+	}
 	return val
 }
 
 export function leftPad(val: string | number, len: number, padder = ' ') {
 	val = String(val)
-	while (val.length < len) { val = padder + val }
+	while (val.length < len) {
+		val = padder + val
+	}
 	return val
 }

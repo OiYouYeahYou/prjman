@@ -3,6 +3,7 @@ import thunk from 'redux-thunk'
 import { createBrowserHistory } from 'history'
 import { routerMiddleware, push } from 'react-router-redux'
 import { createLogger } from 'redux-logger'
+
 import rootReducer from '../reducers'
 
 declare const window: Window & {

@@ -1,5 +1,7 @@
-import { VersioningTools } from './VersioningTools'
 import { spawn } from 'child_process'
+
+import { VersioningTools } from './VersioningTools'
+
 import { Project } from '../Project'
 
 export class Hg extends VersioningTools {
@@ -16,7 +18,7 @@ export class Hg extends VersioningTools {
 			})
 
 			status.on('close', code => {
-				if (code != 0) {
+				if (code !== 0) {
 					reject(new Error(`hg code ${code} for ${this.path}`))
 				}
 
@@ -41,7 +43,7 @@ export class Hg extends VersioningTools {
 			})
 
 			status.on('close', code => {
-				if (code != 0) {
+				if (code !== 0) {
 					reject(new Error(`hg code ${code} for ${this.path}`))
 				}
 
@@ -57,7 +59,9 @@ export class Hg extends VersioningTools {
 	getLastCommitDate() {
 		// hg log -l 1
 		return new Promise<void>((resolve, reject) => {
-			if (this.commitCount == 0) { return }
+			if (this.commitCount === 0) {
+				return
+			}
 			const status = spawn('hg', ['log', '-l', '1'], this._spawnOptions)
 
 			const d: any[] = []
@@ -72,7 +76,7 @@ export class Hg extends VersioningTools {
 			})
 
 			status.on('close', code => {
-				if (code != 0) {
+				if (code !== 0) {
 					reject(new Error(`hg code ${code} for ${this.path}`))
 				}
 

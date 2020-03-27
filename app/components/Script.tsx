@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import { HiderItem } from './HiderItem'
 
 interface IScriptProps {

@@ -1,9 +1,12 @@
-import { readJSON, writeJSON } from '../utils/jsonFile'
-import { exists } from '../utils/fsPath'
-import { EmittingSet } from './EmittingSet'
 import { EventEmitter } from 'events'
-import { configSpec, specTypes } from '../configs'
+
 import * as _ from 'lodash'
+
+import { EmittingSet } from './EmittingSet'
+
+import { exists } from '../utils/fsPath'
+import { readJSON, writeJSON } from '../utils/jsonFile'
+import { configSpec, specTypes } from '../configs'
 
 interface RawData {
 	collections: string[]

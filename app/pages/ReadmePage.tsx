@@ -1,10 +1,13 @@
-import * as React from 'react'
-import { exists, readFile } from '../utils/fsPath'
-import ReactMarkdown = require('react-markdown')
-import { OpenInEditor } from '../components/OpenInEditor'
 import { join } from 'path'
+
+import * as React from 'react'
+import * as ReactMarkdown from 'react-markdown'
 import { Link } from 'react-router-dom'
+
+import { OpenInEditor } from '../components/OpenInEditor'
 import { PageContainerProps } from '../components/page-container'
+
+import { exists, readFile } from '../utils/fsPath'
 
 export interface ReadmePageProps
 	extends PageContainerProps<{ projectid: string }> {}
@@ -166,9 +169,7 @@ export class ReadmePage extends React.Component<ReadmePageProps, states> {
 				return `loading readme at: ${this.state.filename}`
 
 			case States.ERRORED:
-				return `an error occured when reading readme: ${
-					this.state.filename
-				}`
+				return `an error occured when reading readme: ${this.state.filename}`
 
 			case States.BLANK:
 				return `getting some things in order`

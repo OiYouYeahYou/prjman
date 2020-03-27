@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import { ICol } from './colums'
 
 export class Headings extends React.Component<

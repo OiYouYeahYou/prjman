@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { resolve, Result } from 'npm-package-arg'
 
-import { Project, dependencyKeys } from '../../structures/Project'
-import { PageSection } from '../PageSection'
 import { DependencyItem } from './Item'
+
+import { PageSection } from '../PageSection'
 import ProjectDependencyInstaller from '../ProjectDependencyInstaller'
+
+import { Project, dependencyKeys } from '../../structures/Project'
 
 interface DepsSectionProps {
 	project: Project

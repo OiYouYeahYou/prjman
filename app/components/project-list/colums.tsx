@@ -1,9 +1,10 @@
 /* tslint:disable:curly */
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import moment = require('moment')
+
 import { Project } from '../../structures/Project'
 import { leftPad, formatBytes } from '../../utils/reabability'
-import moment = require('moment')
 
 export const sorters: { [key: string]: (a: Project, b: Project) => number } = {
 	activity(a, b) {
@@ -32,9 +33,9 @@ export interface ICol {
 	// heading: string
 	id: string
 	hideheading?: true
+	description?: string
 	fn(project: Project, api: IBLARG): string | number | null | JSX.Element
 	sort?(a: Project, b: Project): number
-	description?: string
 }
 interface IBLARG {
 	updateRow(): void

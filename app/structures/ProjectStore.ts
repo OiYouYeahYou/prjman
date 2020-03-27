@@ -1,8 +1,9 @@
 import { join } from 'path'
-import { Project } from './Project'
-import { isDirectory, readdir } from '../utils/fsPath'
 import { EventEmitter } from 'events'
+
 import { EmittingSet } from './EmittingSet'
+import { isDirectory, readdir } from '../utils/fsPath'
+import { Project } from './Project'
 
 export declare interface ProjectStore {
 	once(event: 'ready', listener: () => void): this

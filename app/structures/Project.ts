@@ -1,7 +1,8 @@
-import { getSize, readdir, rimraf } from '../utils/fsPath'
-import { readJSON } from '../utils/jsonFile'
 import { join } from 'path'
 import { EventEmitter } from 'events'
+
+import { getSize, readdir, rimraf } from '../utils/fsPath'
+import { readJSON } from '../utils/jsonFile'
 import VersioningTools from '../versioning'
 
 export interface PackageJSON {

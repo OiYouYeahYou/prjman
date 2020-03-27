@@ -1,8 +1,9 @@
-import * as React from 'react'
-import { Project } from '../../structures/Project'
-import { ICol } from './colums'
 import electron = require('electron')
-import { projectStore } from '../../stores'
+import * as React from 'react'
+
+import { ICol } from './colums'
+
+import { Project } from '../../structures/Project'
 import { openInEditor } from '../../api/editors'
 
 interface RowsProps {
@@ -25,7 +26,6 @@ export class Row extends React.Component<RowsProps, {}> {
 				key={this.props.project.dirName}
 				onContextMenu={e => {
 					e.preventDefault()
-					console.log(e.pageX, e.pageY)
 
 					electron.remote.Menu.buildFromTemplate(
 						contextTemplate(

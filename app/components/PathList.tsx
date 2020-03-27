@@ -1,6 +1,8 @@
 import * as React from 'react'
+
 import { HiderItem } from './HiderItem'
 import { ReadablePath } from './ReadablePath'
+
 import {
 	normalise,
 	convertToAbsolute,

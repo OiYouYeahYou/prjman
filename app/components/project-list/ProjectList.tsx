@@ -1,9 +1,12 @@
 import * as React from 'react'
+
+import { sorterKeys, sorters, ICol } from './colums'
 import { filterKeys, filters } from './filters'
 import { Headings } from './Headings'
 import { Rows } from './Rows'
+
 import { Select } from '../Select'
-import { sorterKeys, sorters, ICol } from './colums'
+
 import { ProjectStore } from '../../structures/ProjectStore'
 
 interface ProjectListProps {
@@ -19,7 +22,7 @@ interface ProjectListState {
 export class ProjectList extends React.Component<
 	ProjectListProps,
 	ProjectListState
-> {
+	> {
 	readonly state: ProjectListState = {
 		sort: 'activity',
 		filter: 'none',
@@ -30,7 +33,7 @@ export class ProjectList extends React.Component<
 		key: keyof ProjectListState,
 		{ target: { value } }: React.ChangeEvent<HTMLSelectElement>
 	) {
-		if (value == this.state[key]) {
+		if (value === this.state[key]) {
 			return
 		}
 

@@ -1,6 +1,7 @@
-import { Settings } from './structures/Settings'
 import { homedir } from 'os'
 import { join } from 'path'
+
+import { Settings } from './structures/Settings'
 import { TaskManager } from './structures/TaskManager'
 import { ProjectStore } from './structures/ProjectStore'
 

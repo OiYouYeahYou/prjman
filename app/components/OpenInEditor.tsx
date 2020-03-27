@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import { openInEditor } from '../api/editors'
 
 interface OpenInEditorProps {

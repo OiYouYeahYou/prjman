@@ -1,6 +1,6 @@
 import { colKeys } from './components/project-list/colums'
 
-type specValidator = (v: any, spec: configItem) => boolean
+type specValidator = (v: any, spec: IConfigItem) => boolean
 
 export const specTypes: { [key: string]: specValidator } = {
 	boolean: v => typeof v === 'boolean',
@@ -14,7 +14,7 @@ export const specTypes: { [key: string]: specValidator } = {
 		),
 }
 
-interface configItem {
+interface IConfigItem {
 	type: string
 	text: string
 	description?: string
@@ -25,7 +25,7 @@ interface configItem {
 /**
  * Defines the settings you are able to configure in prjman
  */
-export const configSpec: { [key: string]: configItem } = {
+export const configSpec: { [key: string]: IConfigItem } = {
 	'tweaks.mouseNav': {
 		type: 'boolean',
 		text: 'Disable mouse navigation buttons',

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Result } from 'npm-package-arg'
+
 import { GitDependency } from './item-Git'
 import { RegistryDependency } from './item-Registry'
 import { FilePathDependency } from './item-FilePath'

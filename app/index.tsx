@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { render } from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
+import * as electron from 'electron'
+
 import Root from './components/Root'
 import { configureStore, history } from './store/configureStore'
-import electron = require('electron')
+
 import './app.global.scss'
 
 const store = configureStore()
@@ -16,7 +18,7 @@ render(
 )
 
 if ((module as any).hot) {
-	;(module as any).hot.accept('./components/Root', () => {
+	; (module as any).hot.accept('./components/Root', () => {
 		const NextRoot = require('./components/Root').default
 		render(
 			<AppContainer>
@@ -37,7 +39,7 @@ electron.remote
 		}
 	})
 
-const cmds: { [command: string]: (event: electron.Event) => Boolean | void } = {
+const cmds: { [command: string]: (event: electron.Event) => boolean | void } = {
 	'browser-backward': () => {
 		history.goForward()
 		return true

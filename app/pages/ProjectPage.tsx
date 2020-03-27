@@ -5,9 +5,11 @@ import { OpenInEditor } from '../components/OpenInEditor'
 import { Script } from '../components/Script'
 import { DependenciesSection } from '../components/dependencies/Section'
 import { PageSection } from '../components/PageSection'
-import { Project } from '../structures/Project'
-import { formatBytes } from '../utils/reabability'
 import { PageContainerProps } from '../components/page-container'
+
+import { Project } from '../structures/Project'
+
+import { formatBytes } from '../utils/reabability'
 
 export interface ProjectPageProps
 	extends PageContainerProps<{ projectid: string }> {}

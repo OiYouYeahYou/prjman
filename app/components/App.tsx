@@ -1,6 +1,8 @@
 import * as React from 'react'
+
 import { HeaderMenuItem } from './HeaderMenuLink'
 import { TaskSelector } from './TaskSelector'
+
 import { TaskManager } from '../structures/TaskManager'
 
 interface AppProps {

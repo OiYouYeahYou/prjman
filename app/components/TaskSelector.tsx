@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+
 import { Select } from './Select'
+
 import { Task, TaskManager } from '../structures/TaskManager'
 
 export interface TaskSelectorProps {
@@ -15,7 +17,6 @@ export class TaskSelector extends React.Component<
 	TaskSelectorProps,
 	TaskSelectorState
 > {
-
 	constructor(props: TaskSelectorProps) {
 		super(props)
 

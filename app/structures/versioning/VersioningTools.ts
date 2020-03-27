@@ -1,5 +1,6 @@
-import { Project } from '../Project'
 import { spawn } from 'child_process'
+
+import { Project } from '../Project'
 
 interface VersioningStatics {
 	readonly type: string
@@ -90,7 +91,7 @@ export abstract class VersioningTools {
 			})
 
 			status.on('close', code => {
-				if (code != 0) {
+				if (code !== 0) {
 					// @ts-ignore
 					return resolve(cb(d, undefined))
 				}

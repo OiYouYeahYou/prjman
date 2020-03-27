@@ -1,7 +1,8 @@
 import * as React from 'react'
 
-import { HiderItem } from '../HiderItem'
 import { AbstractDependency } from './item-Absctract'
+
+import { HiderItem } from '../HiderItem'
 import { OpenInEditor } from '../OpenInEditor'
 
 type ResultTypes = 'file' | 'directory'

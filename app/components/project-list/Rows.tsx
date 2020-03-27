@@ -1,7 +1,9 @@
 import * as React from 'react'
-import { Project } from '../../structures/Project'
+
 import { ICol } from './colums'
 import { Row } from './Row'
+
+import { Project } from '../../structures/Project'
 
 interface RowsProps {
 	projects: Project[]

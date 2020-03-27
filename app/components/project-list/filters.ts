@@ -15,7 +15,7 @@ export const filters: { [key: string]: (project: Project) => boolean } = {
 
 	isHg(p) {
 		// @ts-ignore
-		return !!p.versioning && p.versioning.type == 'hg'
+		return !!p.versioning && p.versioning.type === 'hg'
 	},
 }
 

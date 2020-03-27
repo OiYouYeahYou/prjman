@@ -1,9 +1,11 @@
 import * as React from 'react'
+
 import { PageSection } from '../components/PageSection'
 import { PathList } from '../components/PathList'
 import { PageContainerProps } from '../components/page-container'
-import { configSpec } from '../configs'
 import { colMap } from '../components/project-list/colums'
+
+import { configSpec } from '../configs'
 
 export interface SettingsPageProps extends PageContainerProps {}
 

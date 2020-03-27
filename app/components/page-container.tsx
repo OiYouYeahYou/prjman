@@ -1,8 +1,9 @@
+import * as React from 'react'
 import { RouteComponentProps } from 'react-router'
+
 import { ProjectStore } from '../structures/ProjectStore'
 import { Settings } from '../structures/Settings'
 import { TaskManager } from '../structures/TaskManager'
-import React = require('react')
 
 export interface PageContainerProps<K = {}> extends RouteComponentProps<K> {
 	projectStore: ProjectStore

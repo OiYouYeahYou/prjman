@@ -1,5 +1,4 @@
-import { homedir } from 'os'
-import { normalize, isAbsolute, resolve } from 'path'
+import { spawn } from 'child_process'
 import {
 	lstat,
 	exists as _exists,
@@ -7,9 +6,8 @@ import {
 	readFile as _readFile,
 	writeFile as _writeFile,
 } from 'fs'
-import reject = require('lodash/reject')
-import { spawn } from 'child_process'
-import { inherits } from 'util'
+import { homedir } from 'os'
+import { normalize, isAbsolute } from 'path'
 
 const _getSize: (
 	path: string,
