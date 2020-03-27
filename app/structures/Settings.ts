@@ -79,7 +79,7 @@ export class Settings extends EventEmitter {
 			throw new Error(`Unexpected config key: ${key}`)
 		}
 
-		const isValid = specTypes[spec.type](value)
+		const isValid = specTypes[spec.type](value, spec)
 
 		if (!isValid) {
 			throw new Error(

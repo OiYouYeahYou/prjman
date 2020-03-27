@@ -3,11 +3,12 @@ import { filterKeys, filters } from './filters'
 import { Headings } from './Headings'
 import { Rows } from './Rows'
 import { Select } from '../Select'
-import { colMap, sorterKeys, sorters } from './colums'
+import { sorterKeys, sorters, ICol } from './colums'
 import { ProjectStore } from '../../structures/ProjectStore'
 
 interface ProjectListProps {
 	projectStore: ProjectStore
+	columnsToDisplay: ICol[]
 }
 
 interface ProjectListState {
@@ -29,7 +30,9 @@ export class ProjectList extends React.Component<
 		key: keyof ProjectListState,
 		{ target: { value } }: React.ChangeEvent<HTMLSelectElement>
 	) {
-		if (value == this.state[key]) { return }
+		if (value == this.state[key]) {
+			return
+		}
 
 		// @ts-ignore
 		this.setState({ [key]: value })
@@ -55,6 +58,7 @@ export class ProjectList extends React.Component<
 			return <b>cannot find any projects</b>
 		}
 
+		const { columnsToDisplay } = this.props
 		const rows = values
 			.filter(filters[this.state.filter])
 			.sort(sorters[this.state.sort])
@@ -79,7 +83,7 @@ export class ProjectList extends React.Component<
 					<thead>
 						<tr>
 							<Headings
-								columns={defaultColumns}
+								columns={columnsToDisplay}
 								click={sort => {
 									if (!sorterKeys.includes(sort)) {
 										return
@@ -91,24 +95,12 @@ export class ProjectList extends React.Component<
 						</tr>
 					</thead>
 					<tbody>
-						<Rows columns={defaultColumns} projects={rows} />
+						<Rows columns={columnsToDisplay} projects={rows} />
 					</tbody>
 				</table>
 			</div>
 		)
 	}
 }
-
-const defaultColumns = [
-	'name',
-	'size',
-	'isNode',
-	'dirty',
-	'lastCommit',
-	'update',
-].map(id => {
-	if (!colMap.has(id)) { throw new Error(`Missing column for ${id}`) }
-	return colMap.get(id)
-})
 
 const castStringTuple = (v: string): [string, string] => [v, v]

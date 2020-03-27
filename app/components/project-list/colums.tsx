@@ -34,12 +34,14 @@ export interface ICol {
 	hideheading?: true
 	fn(project: Project, api: IBLARG): string | number | null | JSX.Element
 	sort?(a: Project, b: Project): number
+	description?: string
 }
 interface IBLARG {
 	updateRow(): void
 }
 
-export const colMap = new Map()
+export const colKeys: string[] = []
+export const colMap = new Map<string, ICol>()
 
 const columns: ICol[] = [
 	{
@@ -193,9 +195,13 @@ const columns: ICol[] = [
 
 columns.forEach(col => {
 	colMap.set(col.id, col)
+	colKeys.push(col.id)
 
-	if (sorters[col.id]) return
-	if (!col.sort) return console.info(`Sorter needed for ${col.id}`)
+	if (sorters[col.id]) {
+		return
+	} else if (!col.sort) {
+		return console.info(`Sorter needed for ${col.id}`)
+	}
 
 	sorters[col.id] = col.sort
 })

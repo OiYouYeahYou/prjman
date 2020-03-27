@@ -3,6 +3,7 @@ import { PageSection } from '../components/PageSection'
 import { PathList } from '../components/PathList'
 import { PageContainerProps } from '../components/page-container'
 import { configSpec } from '../configs'
+import { colMap } from '../components/project-list/colums'
 
 export interface SettingsPageProps extends PageContainerProps {}
 
@@ -22,6 +23,7 @@ export class SettingsPage extends React.Component<
 					<PathList collections={this.props.settings.collections} />
 				</PageSection>
 				<TweaksSection settings={this.props.settings} />
+				<ColumnSelector settings={this.props.settings} />
 			</>
 		)
 	}
@@ -64,12 +66,63 @@ export class TweaksSection extends React.Component<TweaksSectionProps> {
 	}
 }
 
+interface ColumnSelectorSectionProps {
+	settings: {
+		getConfig(key: string): any
+		setConfig(key: string, value: any): void
+	}
+}
+
+export class ColumnSelector extends React.Component<
+	ColumnSelectorSectionProps
+> {
+	render() {
+		const selectedColumns = this.props.settings.getConfig(
+			'project-list.columns'
+		) as string[]
+
+		return (
+			<PageSection title="Project List columns">
+				{Array.from(colMap).map(([key, col]) => {
+					const isSelected = selectedColumns.includes(col.id)
+
+					return (
+						<div key={'settings project list ' + key}>
+							<Select
+								value={isSelected}
+								text={col.id}
+								description={col.description}
+								onChange={() => {
+									if (isSelected) {
+										this.props.settings.setConfig(
+											'project-list.columns',
+											selectedColumns.filter(
+												v => v !== col.id
+											)
+										)
+									} else {
+										this.props.settings.setConfig(
+											'project-list.columns',
+											[...selectedColumns, col.id]
+										)
+									}
+
+									this.forceUpdate()
+								}}
+							/>
+						</div>
+					)
+				})}
+			</PageSection>
+		)
+	}
+}
+
 interface SelectProps {
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 	text: string
 	value: boolean
 	description?: string
-	defaultValue: any
 }
 
 export class Select extends React.Component<SelectProps> {
