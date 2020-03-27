@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useState } from 'react'
 import * as Redux from 'react-redux'
 import { History } from 'history'
 import { Provider } from 'react-redux'
@@ -25,7 +26,16 @@ interface IRootType {
 const stores: IStores = { projectStore, settings, tasks }
 
 export default function Root({ store, history }: IRootType) {
+	const [v, setValue] = useState(0)
 	const pageContainer = PageContainer(stores)
+
+	if (!settings.loaded) {
+		settings.once('loaded', () => {
+			setTimeout(() => setValue(v + 1), 500)
+		})
+
+		return <div>Waiting for settings to load</div>
+	}
 
 	return (
 		<Provider store={store}>

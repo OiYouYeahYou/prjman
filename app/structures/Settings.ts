@@ -45,6 +45,8 @@ export class Settings extends EventEmitter {
 		this._loaded = true
 		data.collections.forEach(path => this.collections.add(path))
 		this._configs = new Map(data.configs || [])
+
+		this.emit('loaded')
 	}
 
 	async save() {
