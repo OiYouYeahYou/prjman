@@ -139,7 +139,7 @@
 		"moment": "^2.24.0",
 		"node-cache": "^4.2.0",
 		"npm-package-arg": "^6.1.0",
-		"npm-registry-fetch": "^3.8.0",
+		"npm-registry-fetch": "^4.0.5",
 		"react": "^16.0.0",
 		"react-dom": "^16.0.0",
 		"react-markdown": "^3.6.0",
